@@ -5,11 +5,12 @@ import ClientPortal from './components/ClientPortal';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { DashboardLayout } from '@toolpad/core';
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#00796b' },
-    secondary: { main: '#c2185b' },
+    primary: { main: '#A266B0' },
+    secondary: { main: '#A266B0' },
   },
 });
 
@@ -23,11 +24,13 @@ function App() {
     <Router>
       <ThemeProvider theme={theme}>
         <AppProvider navigation={NAVIGATION}>
-          <Routes>
-            <Route path="/" element={<AdminDashboard />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/client-portal" element={<ClientPortal />} />
-          </Routes>
+          <DashboardLayout>
+            <Routes>
+              <Route path="/" element={<AdminDashboard />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/client-portal" element={<ClientPortal />} />
+            </Routes>
+          </DashboardLayout>
         </AppProvider>
       </ThemeProvider>
     </Router>
