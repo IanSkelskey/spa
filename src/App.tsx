@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { AppProvider } from '@toolpad/core/AppProvider';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AdminDashboard from './components/AdminDashboard';
+import ClientPortal from './components/ClientPortal';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import PersonIcon from '@mui/icons-material/Person';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: { main: '#00796b' },
+    secondary: { main: '#c2185b' },
+  },
+});
+
+const NAVIGATION = [
+  { segment: 'admin-dashboard', title: 'Admin Dashboard', icon: <DashboardIcon /> },
+  { segment: 'client-portal', title: 'Client Portal', icon: <PersonIcon /> },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <ThemeProvider theme={theme}>
+        <AppProvider navigation={NAVIGATION}>
+          <Routes>
+            <Route path="/" element={<AdminDashboard />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/client-portal" element={<ClientPortal />} />
+          </Routes>
+        </AppProvider>
+      </ThemeProvider>
+    </Router>
+  );
 }
 
-export default App
+export default App;
