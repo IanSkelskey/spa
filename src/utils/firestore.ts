@@ -16,3 +16,8 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 		return null;
 	}
 }
+
+export async function getUserRole(email: string): Promise<string | null> {
+	const user = await getUserByEmail(email);
+	return user?.role ?? null;
+}
