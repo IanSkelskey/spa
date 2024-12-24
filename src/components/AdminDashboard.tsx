@@ -1,10 +1,20 @@
-import { PageContainer } from '@toolpad/core/PageContainer';
+import { Person } from '@mui/icons-material';
+import { DashboardLayout } from '@toolpad/core';
+import { Dispatch, SetStateAction } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-function AdminDashboard() {
+const NAVIGATION = [
+	{ segment: 'clients', title: 'Clients', icon: <Person /> },
+  ];
+
+  function AdminDashboard({ setNavigation }: { setNavigation: Dispatch<SetStateAction<{ segment: string; title: string; icon: JSX.Element; }[]>> }) {
+	setNavigation(NAVIGATION);
 	return (
-		<PageContainer title='Admin Dashboard'>
-			{/* Add components for managing client data */}
-		</PageContainer>
+		<DashboardLayout>
+			<Routes>
+				<Route path="/clients" element={<div>Clients</div>} />
+			</Routes>
+		</DashboardLayout>
 	);
 }
 
