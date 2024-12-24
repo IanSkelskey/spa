@@ -1,31 +1,36 @@
 import { AuthProvider, SignInPage } from '@toolpad/core/SignInPage';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import app from '../../firebaseConfig'; // Import the app instance
+import { useNavigate } from 'react-router-dom';
 
 interface AuthResponse {
 	user?: any;
 	error?: string;
 }
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
 
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
 const LoginPage = () => {
 	const navigate = useNavigate();
 
-	const signIn = async (provider: AuthProvider, credentials: any): Promise<AuthResponse> => {
+	const signIn = async (provider: AuthProvider, formData: FormData, _callbackUrl?: string): Promise<AuthResponse> => {
+		console.log('FormData:', formData); // Debugging line
 		if (provider.id === 'credentials') {
-			const auth = getAuth();
+			const auth = getAuth(app);
 			try {
-				const userCredential = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
-				navigate('/admin-dashboard'); // Redirect on successful login
+				const email = formData.get('email') as string;
+				const password = formData.get('password') as string;
+				const userCredential = await signInWithEmailAndPassword(auth, email, password);
+				console.log('User signed in:', userCredential);
+				navigate('/admin-dashboard');
 				return { user: userCredential.user };
 			} catch (error) {
+				console.error('Error during sign-in:', error); // Debugging line
 				return { error: (error as any).message };
 			}
 		}
 		return { error: 'Invalid provider' };
 	};
-
 
 	return (
 		<SignInPage
@@ -36,7 +41,6 @@ const LoginPage = () => {
 				passwordField: { label: 'Password', required: true },
 			}}
 		/>
-
 	);
 };
 
