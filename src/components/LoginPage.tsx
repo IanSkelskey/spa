@@ -2,6 +2,7 @@ import { AuthProvider, SignInPage } from '@toolpad/core/SignInPage';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import app from '../../firebaseConfig'; // Import the app instance
 import { useNavigate } from 'react-router-dom';
+import { FirebaseError } from 'firebase/app';
 
 interface AuthResponse {
 	user?: any;
@@ -14,7 +15,7 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 
 	const signIn = async (provider: AuthProvider, formData: FormData, _callbackUrl?: string): Promise<AuthResponse> => {
-		console.log('FormData:', formData); // Debugging line
+
 		if (provider.id === 'credentials') {
 			const auth = getAuth(app);
 			try {
@@ -24,9 +25,13 @@ const LoginPage = () => {
 				console.log('User signed in:', userCredential);
 				navigate('/admin-dashboard');
 				return { user: userCredential.user };
-			} catch (error) {
-				console.error('Error during sign-in:', error); // Debugging line
-				return { error: (error as any).message };
+			} catch (error: unknown) {
+				if (error instanceof FirebaseError) {
+					if (error.code === 'auth/invalid-credential') {
+						return { error: 'Invalid email or password' };
+					}
+				}
+				return { error: 'An unknown error occurred' };
 			}
 		}
 		return { error: 'Invalid provider' };
