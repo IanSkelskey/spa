@@ -1,9 +1,9 @@
+import { Typography } from '@mui/material';
 import { PageContainer } from '@toolpad/core/PageContainer';
 
 function AdminDashboard() {
 	return (
-		<PageContainer>
-			<h1>Admin Dashboard</h1>
+		<PageContainer title='Admin Dashboard'>
 			{/* Add components for managing client data */}
 		</PageContainer>
 	);

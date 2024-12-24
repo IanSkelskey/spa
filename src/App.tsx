@@ -7,6 +7,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import { DashboardLayout } from '@toolpad/core';
 import LandingPage from './components/LandingPage';
 import theme from './theme';
+import logo from './assets/logo.png';
+import { Box } from '@mui/material';
 
 const NAVIGATION = [
   { segment: 'admin-dashboard', title: 'Admin Dashboard', icon: <DashboardIcon /> },
@@ -16,8 +18,14 @@ const NAVIGATION = [
 function App() {
   return (
     <Router>
-      <AppProvider navigation={NAVIGATION} theme={theme} style={{ width: '100vw' }} >
-        {true ?
+      <AppProvider navigation={NAVIGATION} theme={theme} branding={{
+        title: 'Spa Dashboard', logo: (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <img src={logo} alt="Spa Dashboard" />
+          </Box>
+        ),
+      }}>
+        {false ?
           <LandingPage />
           :
           <DashboardLayout>
