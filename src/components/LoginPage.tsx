@@ -1,7 +1,6 @@
 import { AuthProvider, SignInPage } from '@toolpad/core/SignInPage';
 import { useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
-import { PageContainer } from '@toolpad/core';
 
 interface AuthResponse {
 	user?: any;
