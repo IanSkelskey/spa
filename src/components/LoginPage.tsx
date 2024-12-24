@@ -2,7 +2,6 @@ import { AuthProvider, SignInPage } from '@toolpad/core/SignInPage';
 import { useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
 import { PageContainer } from '@toolpad/core';
-import { getUserByEmail } from '../utils/firestore';
 
 interface AuthResponse {
 	user?: any;
@@ -39,16 +38,14 @@ const LoginPage = ({ auth, signInWithEmailAndPassword }: { auth: Auth, signInWit
 	};
 
 	return (
-		<PageContainer>
-			<SignInPage
-				signIn={signIn}
-				providers={providers}
-				slotProps={{
-					emailField: { label: 'Email', required: true },
-					passwordField: { label: 'Password', required: true },
-				}}
-			/>
-		</PageContainer>
+		<SignInPage
+			signIn={signIn}
+			providers={providers}
+			slotProps={{
+				emailField: { label: 'Email', required: true },
+				passwordField: { label: 'Password', required: true },
+			}}
+		/>
 	);
 };
 
