@@ -9,6 +9,7 @@ import theme from './theme';
 import logo from './assets/logo.png';
 import { Box } from '@mui/material';
 import LoginPage from './components/LoginPage';
+import '../firebaseConfig';
 
 const NAVIGATION = [
   { segment: 'admin-dashboard', title: 'Admin Dashboard', icon: <DashboardIcon /> },
