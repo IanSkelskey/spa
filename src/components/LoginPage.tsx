@@ -2,6 +2,7 @@ import { AuthProvider, SignInPage } from '@toolpad/core/SignInPage';
 import { useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
 import { PageContainer } from '@toolpad/core';
+import { getUserByEmail } from '../utils/firestore';
 
 interface AuthResponse {
 	user?: any;
