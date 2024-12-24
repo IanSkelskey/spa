@@ -1,8 +1,7 @@
 import { AuthProvider, SignInPage } from '@toolpad/core/SignInPage';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import app from '../../firebaseConfig'; // Import the app instance
 import { useNavigate } from 'react-router-dom';
 import { FirebaseError } from 'firebase/app';
+import { PageContainer } from '@toolpad/core';
 
 interface AuthResponse {
 	user?: any;
@@ -11,13 +10,14 @@ interface AuthResponse {
 
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
-const LoginPage = () => {
+import { Auth } from 'firebase/auth';
+
+const LoginPage = ({ auth, signInWithEmailAndPassword }: { auth: Auth, signInWithEmailAndPassword: (auth: Auth, email: string, password: string) => Promise<any> }) => {
 	const navigate = useNavigate();
 
 	const signIn = async (provider: AuthProvider, formData: FormData, _callbackUrl?: string): Promise<AuthResponse> => {
 
 		if (provider.id === 'credentials') {
-			const auth = getAuth(app);
 			try {
 				const email = formData.get('email') as string;
 				const password = formData.get('password') as string;
@@ -38,14 +38,16 @@ const LoginPage = () => {
 	};
 
 	return (
-		<SignInPage
-			signIn={signIn}
-			providers={providers}
-			slotProps={{
-				emailField: { label: 'Email', required: true },
-				passwordField: { label: 'Password', required: true },
-			}}
-		/>
+		<PageContainer>
+			<SignInPage
+				signIn={signIn}
+				providers={providers}
+				slotProps={{
+					emailField: { label: 'Email', required: true },
+					passwordField: { label: 'Password', required: true },
+				}}
+			/>
+		</PageContainer>
 	);
 };
 
