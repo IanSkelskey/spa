@@ -17,7 +17,6 @@ const LoginPage = ({ auth, signInWithEmailAndPassword, onLogin }: { auth: Auth, 
 			const email = formData.get('email') as string;
 			const password = formData.get('password') as string;
 			const userCredential = await signInWithEmailAndPassword(auth, email, password);
-			console.log('User signed in:', userCredential);
 			onLogin(userCredential.user);
 			return { user: userCredential.user };
 		} catch (error: unknown) {
@@ -26,7 +25,7 @@ const LoginPage = ({ auth, signInWithEmailAndPassword, onLogin }: { auth: Auth, 
 					return { error: 'Invalid email or password' };
 				}
 			}
-			return { error: 'An unknown error occurred' };
+			return { error: 'An unknown error occurred: ' + (error as Error).message };
 		}
 	};
 
