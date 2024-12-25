@@ -1,7 +1,5 @@
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import AdminDashboard from './components/AdminDashboard';
-import ClientDashboard from './components/ClientDashboard';
 import theme from './utils/theme';
 import logo from './assets/logo.png';
 import { Box } from '@mui/material';
@@ -10,12 +8,20 @@ import './utils/firebaseConfig';
 import { useState } from 'react';
 import app from './utils/firebaseConfig';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { DashboardLayout } from '@toolpad/core';
 
 const auth = getAuth(app);
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const user = auth.currentUser;
   return user ? children : <Navigate to="/" />;
+}
+
+function onLogin(user: any) {
+  console.log('User signed in:', user);
+  // navigate to the dashboard
+  // set up the dashboard navigation based on the user's role
+  
 }
 
 function App() {
@@ -31,9 +37,8 @@ function App() {
         ),
       }}>
         <Routes>
-          <Route path="/admin-dashboard" element={<PrivateRoute><AdminDashboard setNavigation={setNavigation} /></PrivateRoute>} />
-          <Route path="/client-dashboard" element={<PrivateRoute><ClientDashboard setNavigation={setNavigation} /></PrivateRoute>} />
-          <Route path="/" element={<LoginPage auth={auth} signInWithEmailAndPassword={signInWithEmailAndPassword} />} />
+          <Route path="/dashboard" element={<PrivateRoute><DashboardLayout><div>Dashboard</div></DashboardLayout></PrivateRoute>} />
+          <Route path="/" element={<LoginPage auth={auth} signInWithEmailAndPassword={signInWithEmailAndPassword} onLogin={onLogin} />} />
         </Routes>
       </AppProvider>
     </Router>
