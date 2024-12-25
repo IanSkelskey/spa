@@ -8,14 +8,17 @@ import {
 } from "react-router-dom";
 import { lightTheme, darkTheme } from "./utils/theme";
 import logo from "./assets/logo.png";
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import LoginPage from "./components/LoginPage";
 import "./utils/firebaseConfig";
 import { useState } from "react";
 import app from "./utils/firebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { DashboardLayout, PageContainer } from "@toolpad/core";
+import { getUserRole } from "./utils/firestore";
+import AdminDashboard from "./components/AdminDashboard";
+import ClientDashboard from "./components/ClientDashboard";
 import { Dashboard } from "@mui/icons-material";
+import { DashboardLayout } from "@toolpad/core";
 
 const auth = getAuth(app);
 
@@ -29,17 +32,29 @@ function App() {
   const [navigation, setNavigation] = useState<
     { segment: string; title: string; icon: JSX.Element }[]
   >([]);
-
+  const [dashboard, setDashboard] = useState<JSX.Element | null>(null);
   const navigate = useNavigate();
 
-  const onLogin = (user: any) => {
+  const onLogin = async (user: any) => {
     console.log("User signed in:", user);
-    navigate("/dashboard");
-    // Example: set navigation based on role
-    setNavigation([
-      { segment: "dashboard", title: "Dashboard", icon: <Dashboard /> },
-    ]);
+    const role = await getUserRole(user.email);
+    console.log("User role:", role);
+    if (role) {
+      openDashboard(role);
+    } else {
+      console.error("Role is null");
+    }
   };
+
+  const openDashboard = (role: string) => {
+    if (role === "owner" || role === "staff" || role === "client") {
+      setDashboard(role === "owner" || role === "staff" ? <AdminDashboard setNavigation={setNavigation} /> : <ClientDashboard setNavigation={setNavigation} />);
+      navigate("/dashboard");
+    } else {
+      console.error("Unknown role:", role);
+    }
+  }
+
 
   return (
     <AppProvider
@@ -66,11 +81,7 @@ function App() {
           path="/dashboard"
           element={
             <PrivateRoute>
-              <DashboardLayout>
-                <PageContainer>
-                  <Typography variant="h4">Dashboard</Typography>
-                </PageContainer>
-              </DashboardLayout>
+              {dashboard || <div>Loading...</div>}
             </PrivateRoute>
           }
         />
