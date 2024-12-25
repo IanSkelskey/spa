@@ -8,13 +8,13 @@ import {
 } from "react-router-dom";
 import { lightTheme, darkTheme } from "./utils/theme";
 import logo from "./assets/logo.png";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import LoginPage from "./components/LoginPage";
 import "./utils/firebaseConfig";
 import { useState } from "react";
 import app from "./utils/firebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { DashboardLayout } from "@toolpad/core";
+import { DashboardLayout, PageContainer } from "@toolpad/core";
 import { Dashboard } from "@mui/icons-material";
 
 const auth = getAuth(app);
@@ -67,7 +67,9 @@ function App() {
           element={
             <PrivateRoute>
               <DashboardLayout>
-                <div>Dashboard</div>
+                <PageContainer>
+                  <Typography variant="h4">Dashboard</Typography>
+                </PageContainer>
               </DashboardLayout>
             </PrivateRoute>
           }
