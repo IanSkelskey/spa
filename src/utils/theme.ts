@@ -1,48 +1,12 @@
-import { createTheme } from "@mui/material";
+import { createTheme, ThemeOptions } from "@mui/material";
 
-const theme = createTheme({
+const commonSettings: ThemeOptions = {
 	palette: {
 		primary: { main: '#A266B0' },
 		secondary: { main: '#A266B0' },
 	},
 	typography: {
 		fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-		h1: {
-			color: '#A266B0',
-			fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-			fontWeight: 700,
-			textTransform: 'uppercase',
-		},
-		h2: {
-			color: '#A266B0',
-			fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-			fontWeight: 700,
-			textTransform: 'uppercase',
-		},
-		h3: {
-			color: '#A266B0',
-			fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-			fontWeight: 700,
-			textTransform: 'uppercase',
-		},
-		h4: {
-			color: '#A266B0',
-			fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-			fontWeight: 700,
-			textTransform: 'uppercase',
-		},
-		h5: {
-			color: '#A266B0',
-			fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-			fontWeight: 700,
-			textTransform: 'uppercase',
-		},
-		h6: {
-			color: '#A266B0',
-			fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-			fontWeight: 700,
-			textTransform: 'uppercase',
-		},
 		body1: {
 			fontFamily: "'Open Sans', sans-serif",
 		},
@@ -50,6 +14,28 @@ const theme = createTheme({
 			textTransform: 'none',
 		},
 	},
+};
+
+const lightTheme = createTheme({
+	...commonSettings,
+	palette: {
+		mode: 'light',
+		...commonSettings.palette,
+	},
+	typography: {
+		...commonSettings.typography,
+	},
 });
 
-export default theme;
+const darkTheme = createTheme({
+	...commonSettings,
+	palette: {
+		mode: 'dark',
+		...commonSettings.palette,
+	},
+	typography: {
+		...commonSettings.typography,
+	},
+});
+
+export { lightTheme, darkTheme };
