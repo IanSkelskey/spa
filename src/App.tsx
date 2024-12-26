@@ -8,7 +8,7 @@ import { getUserRole } from "./utils/firestore";
 import logo from "./assets/logo.png";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { Dashboard, Person } from "@mui/icons-material";
+import { Badge, Dashboard, Person } from "@mui/icons-material";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -41,7 +41,7 @@ function App() {
         {
           segment: "staff",
           title: "Staff",
-          icon: <Person />,
+          icon: <Badge />,
         }
       ];
     } else if (role === "client") {
