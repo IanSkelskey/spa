@@ -1,40 +1,34 @@
-import { Dashboard, Person } from "@mui/icons-material";
+import * as React from "react";
 import { PageContainer } from "@toolpad/core";
-import { useEffect, useState } from "react";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
 
 export function useNavigation(role: string) {
-	const [navigation, setNavigation] = useState<{ segment: string; title: string; icon: JSX.Element }[]>([]);
-	const [routes, setRoutes] = useState<{ [key: string]: { path: string; component: JSX.Element } }>({});
+  const [routes, setRoutes] = React.useState<
+    { path: string; component: JSX.Element }[]
+  >([]);
 
-	useEffect(() => {
-		if (role === 'owner' || role === 'staff') {
-			setRoutes({
-				clients: { path: '/clients', component: <PageContainer maxWidth={false} title='Clients'>Clients</PageContainer> },
-				dashboard: { path: '/dashboard', component: <PageContainer maxWidth={false} title='Dashboard'>Dashboard</PageContainer> }
-			});
-			setNavigation([
-				{
-					segment: 'dashboard',
-					title: 'Dashboard',
-					icon: <Dashboard />
-				},
-				{
-					segment: 'clients',
-					title: 'Clients',
-					icon: <Person />
-				}
-			]);
-		} else if (role === 'client') {
-			setRoutes({
-				profile: { path: '/profile', component: <PageContainer maxWidth={false} title='profile'>Profile</PageContainer> }
-			});
-			setNavigation([{
-				segment: 'profile',
-				title: 'Profile',
-				icon: <Person />
-			}]);
-		}
-	}, [role]);
+  React.useEffect(() => {
+    if (role === "owner" || role === "staff") {
+      setRoutes([
+        {
+          path: "dashboard",
+          component: <PageContainer title="Dashboard">Dashboard Content</PageContainer>,
+        },
+        {
+          path: "clients",
+          component: <PageContainer title="Clients">Clients Content</PageContainer>,
+        },
+      ]);
+    } else if (role === "client") {
+      setRoutes([
+        {
+          path: "profile",
+          component: <PageContainer title="Profile">Profile Content</PageContainer>,
+        },
+      ]);
+    }
+  }, [role]);
 
-	return { navigation, routes };
+  return { routes };
 }

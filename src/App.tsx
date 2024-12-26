@@ -1,42 +1,63 @@
-import { AppProvider } from "@toolpad/core/AppProvider";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
+import * as React from "react";
+import { AppProvider } from "@toolpad/core/react-router-dom";
+import type { Navigation } from "@toolpad/core";
+import { useMediaQuery } from "@mui/material";
 import { lightTheme, darkTheme } from "./utils/theme";
-import logo from "./assets/logo.png";
-import { Box, Typography, useMediaQuery } from "@mui/material";
-import "./utils/firebaseConfig";
 import { useAuth } from "./utils/useAuth";
-import { DashboardLayout, SidebarFooterProps } from "@toolpad/core";
-import { useNavigation } from "./utils/useNavigation";
 import { getUserRole } from "./utils/firestore";
-import { useEffect, useState } from "react";
+import logo from "./assets/logo.png";
+import { Box } from "@mui/material";
+import { Outlet } from "react-router-dom";
+import { Dashboard, Person } from "@mui/icons-material";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const { user } = useAuth();
+  const [role, setRole] = React.useState<string | null>(null);
 
-  const { user, AuthWrapper, logout } = useAuth();
-
-  const [role, setRole] = useState<string | null>(null);
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (user && user.email) {
       getUserRole(user.email).then(setRole);
     }
   }, [user]);
 
-  const {navigation, routes} = useNavigation(role || '');
-
-  useEffect(() => {
-    console.log("User role is", role);
-    console.log("Navigation is", navigation);
-  }, [role, navigation]);
+  const NAVIGATION: Navigation = React.useMemo(() => {
+    if (role === "owner" || role === "staff") {
+      return [
+        {
+          kind: "header",
+          title: "Main Items",
+        },
+        {
+          segment: "dashboard",
+          title: "Dashboard",
+          icon: <Dashboard />,
+        },
+        {
+          segment: "clients",
+          title: "Clients",
+          icon: <Person />,
+        },
+      ];
+    } else if (role === "client") {
+      return [
+        {
+          kind: "header",
+          title: "Profile",
+        },
+        {
+          segment: "profile",
+          title: "Profile",
+          icon: <Person />,
+        },
+      ];
+    }
+    return [];
+  }, [role]);
 
   return (
     <AppProvider
-      navigation={navigation}
+      navigation={NAVIGATION}
       theme={prefersDarkMode ? darkTheme : lightTheme}
       branding={{
         title: "Spa Dashboard",
@@ -54,51 +75,9 @@ function App() {
         ),
       }}
     >
-      <AuthWrapper>
-        <DashboardLayout
-          slots={{
-            sidebarFooter: SidebarFooter,
-            toolbarActions: () => <ToolbarActionsLogout logout={logout} />,
-          }}
-        >
-          <Routes>
-            {Object.values(routes).map(({ path, component }: { path: string; component: JSX.Element }) => (
-              <Route key={path} path={path} element={component} />
-            ))}
-          </Routes>
-        </DashboardLayout>
-      </AuthWrapper>
+      <Outlet />
     </AppProvider>
   );
 }
 
-function RootApp() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
-}
-
-export default RootApp;
-
-function SidebarFooter({ mini }: SidebarFooterProps) {
-  return (
-    <Typography
-      variant="caption"
-      sx={{ m: 1, whiteSpace: 'nowrap', overflow: 'hidden', color: 'text.secondary' }}
-    >
-      {mini ? '© 2024' : `© ${new Date().getFullYear()} Made with ❤️ by Ian Skelskey`}
-    </Typography>
-  );
-}
-
-import { Button } from "@mui/material";
-
-function ToolbarActionsLogout({ logout }: { logout: () => void }) {
-  return (
-    <Button variant="contained" color="primary" onClick={() => logout()}>
-      Logout
-    </Button>
-  );
-}
+export default App;
