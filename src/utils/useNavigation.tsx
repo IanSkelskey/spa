@@ -9,8 +9,8 @@ export function useNavigation(role: string) {
 	useEffect(() => {
 		if (role === 'owner' || role === 'staff') {
 			setRoutes({
-				clients: { path: '/clients', component: <PageContainer title='clients'>Clients</PageContainer> },
-				dashboard: { path: '/dashboard', component: <PageContainer title='dashboard'>Dashboard</PageContainer> }
+				clients: { path: '/clients', component: <PageContainer maxWidth={false} title='Clients'>Clients</PageContainer> },
+				dashboard: { path: '/dashboard', component: <PageContainer maxWidth={false} title='Dashboard'>Dashboard</PageContainer> }
 			});
 			setNavigation([
 				{
@@ -26,7 +26,7 @@ export function useNavigation(role: string) {
 			]);
 		} else if (role === 'client') {
 			setRoutes({
-				profile: { path: '/profile', component: <PageContainer title='profile'>Profile</PageContainer> }
+				profile: { path: '/profile', component: <PageContainer maxWidth={false} title='profile'>Profile</PageContainer> }
 			});
 			setNavigation([{
 				segment: 'profile',
