@@ -1,14 +1,10 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import LoginPage from "../pages/login";
 import app from "./firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { AuthProvider } from "@toolpad/core";
 
 const auth = getAuth(app);
-
-interface AuthWrapperProps {
-	children: ReactNode;
-}
 
 export function useAuth() {
 	const [user, setUser] = useState<User | null>(null);
@@ -19,6 +15,22 @@ export function useAuth() {
 		}).catch((error) => {
 			console.error("Error signing out: ", error);
 		});
+	};
+
+	const login = async (email: string, password: string): Promise<{ user?: User; error?: string }> => {
+		try {
+			const userCredential = await signInWithEmailAndPassword(auth, email, password);
+			setUser(userCredential.user);
+			return { user: userCredential.user };
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				if (error.message.includes('auth/invalid-credential')) {
+					return { error: 'Invalid email or password' };
+				}
+				return { error: 'An unknown error occurred: ' + error.message };
+			}
+			return { error: 'An unknown error occurred' };
+		}
 	};
 
 	useEffect(() => {
@@ -33,21 +45,5 @@ export function useAuth() {
 		return () => unsubscribe();
 	}, []);
 
-	const AuthWrapper = ({ children }: AuthWrapperProps) => {
-		if (!user) {
-			return (
-				<LoginPage
-					auth={auth}
-					signInWithEmailAndPassword={signInWithEmailAndPassword}
-					onLogin={(user: User) => setUser(user)}
-				/>
-			);
-		}
-
-		console.log("User is logged in", user);
-
-		return <>{children}</>;
-	};
-
-	return { user, AuthWrapper, logout };
+	return { user, login, logout };
 }

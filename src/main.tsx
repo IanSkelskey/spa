@@ -9,11 +9,17 @@ import LoadingFallback from "./components/LoadingFallback";
 const DashboardPage = React.lazy(() => import("./pages/index"));
 const ClientsPage = React.lazy(() => import("./pages/clients"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
+const LoginPage = React.lazy(() => import("./pages/login"));
 
 export const LogoutContext = React.createContext<() => void>(() => {});
 
 const AppWithAuth = () => {
-  const { logout } = useAuth();
+  const { user, login, logout } = useAuth();
+
+  // If no user is provided, always render the login page
+  if (!user) {
+    return <LoginPage login={login} />;
+  }
 
   return (
     <LogoutContext.Provider value={logout}>
@@ -34,9 +40,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            Component: () => (
-              <DashboardLayout />
-            ),
+            Component: () => <DashboardLayout />,
             children: [
               {
                 path: "dashboard",
@@ -53,6 +57,13 @@ const router = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: "/login",
+        Component: () => {
+          const { login } = useAuth();
+          return <LoginPage login={login} />;
+        },  // Ensure the login page is accessible directly via /login
       },
     ],
   },
