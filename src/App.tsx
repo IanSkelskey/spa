@@ -3,58 +3,36 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate,
-  useNavigate,
 } from "react-router-dom";
 import { lightTheme, darkTheme } from "./utils/theme";
 import logo from "./assets/logo.png";
 import { Box, useMediaQuery } from "@mui/material";
-import LoginPage from "./components/LoginPage";
 import "./utils/firebaseConfig";
-import { useState } from "react";
-import app from "./utils/firebaseConfig";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getUserRole } from "./utils/firestore";
-import AdminDashboard from "./components/AdminDashboard";
-import ClientDashboard from "./components/ClientDashboard";
-import { Dashboard } from "@mui/icons-material";
+import { useAuth } from "./utils/useAuth";
 import { DashboardLayout } from "@toolpad/core";
-
-const auth = getAuth(app);
-
-function PrivateRoute({ children }: { children: JSX.Element }) {
-  const user = auth.currentUser;
-  return user ? children : <Navigate to="/" />;
-}
+import { useNavigation } from "./utils/useNavigation";
+import { getUserRole } from "./utils/firestore";
+import { useEffect, useState } from "react";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const [navigation, setNavigation] = useState<
-    { segment: string; title: string; icon: JSX.Element }[]
-  >([]);
-  const [dashboard, setDashboard] = useState<JSX.Element | null>(null);
-  const navigate = useNavigate();
 
-  const onLogin = async (user: any) => {
-    console.log("User signed in:", user);
-    const role = await getUserRole(user.email);
-    console.log("User role:", role);
-    if (role) {
-      openDashboard(role);
-    } else {
-      console.error("Role is null");
+  const { user, AuthWrapper } = useAuth();
+
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user && user.email) {
+      getUserRole(user.email).then(setRole);
     }
-  };
+  }, [user]);
 
-  const openDashboard = (role: string) => {
-    if (role === "owner" || role === "staff" || role === "client") {
-      setDashboard(role === "owner" || role === "staff" ? <AdminDashboard setNavigation={setNavigation} /> : <ClientDashboard setNavigation={setNavigation} />);
-      navigate("/dashboard");
-    } else {
-      console.error("Unknown role:", role);
-    }
-  }
+  const {navigation, routes} = useNavigation(role || '');
 
+  useEffect(() => {
+    console.log("User role is", role);
+    console.log("Navigation is", navigation);
+  }, [role, navigation]);
 
   return (
     <AppProvider
@@ -76,26 +54,15 @@ function App() {
         ),
       }}
     >
-      <Routes>
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              {dashboard || <div>Loading...</div>}
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <LoginPage
-              auth={auth}
-              signInWithEmailAndPassword={signInWithEmailAndPassword}
-              onLogin={onLogin}
-            />
-          }
-        />
-      </Routes>
+      <AuthWrapper>
+        <DashboardLayout>
+          <Routes>
+            {Object.values(routes).map(({ path, component }: { path: string; component: JSX.Element }) => (
+              <Route key={path} path={path} element={component} />
+            ))}
+          </Routes>
+        </DashboardLayout>
+      </AuthWrapper>
     </AppProvider>
   );
 }
