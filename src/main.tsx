@@ -8,6 +8,7 @@ import LoadingFallback from "./components/LoadingFallback";
 
 const DashboardPage = React.lazy(() => import("./pages/index"));
 const ClientsPage = React.lazy(() => import("./pages/clients"));
+const StaffPage = React.lazy(() => import("./pages/staff"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
 const LoginPage = React.lazy(() => import("./pages/login"));
 
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
                 path: "profile",
                 Component: ProfilePage,
               },
+              {
+                path: "staff",
+                Component: StaffPage,
+              }
             ],
           },
         ],

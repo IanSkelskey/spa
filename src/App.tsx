@@ -38,6 +38,11 @@ function App() {
           title: "Clients",
           icon: <Person />,
         },
+        {
+          segment: "staff",
+          title: "Staff",
+          icon: <Person />,
+        }
       ];
     } else if (role === "client") {
       return [
