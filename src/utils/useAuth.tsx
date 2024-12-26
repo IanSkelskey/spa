@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import app from "./firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { AuthProvider } from "@toolpad/core";
 
 const auth = getAuth(app);
 

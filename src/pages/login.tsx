@@ -7,8 +7,6 @@ interface AuthResponse {
 
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
-import { Auth } from 'firebase/auth';
-
 const LoginPage = ({ login }: { login: (email: string, password: string) => void | Promise<AuthResponse> }) => {
 
 	const signIn = async (_provider: AuthProvider, formData?: any, _callbackUrl?: string) => {
