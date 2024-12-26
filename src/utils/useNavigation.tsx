@@ -1,7 +1,5 @@
 import * as React from "react";
 import { PageContainer } from "@toolpad/core";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonIcon from "@mui/icons-material/Person";
 
 export function useNavigation(role: string) {
   const [routes, setRoutes] = React.useState<

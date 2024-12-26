@@ -1,6 +1,6 @@
 import { useState, useEffect, ReactNode } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import LoginPage from "../components/LoginPage";
+import LoginPage from "../pages/login";
 import app from "./firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 

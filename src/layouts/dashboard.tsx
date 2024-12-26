@@ -1,10 +1,19 @@
+import * as React from "react";
 import { Outlet } from "react-router-dom";
-import { DashboardLayout } from "@toolpad/core";
+import { DashboardLayout as CoreDashboardLayout } from "@toolpad/core";
+import { LogoutContext } from "../main";
+import ToolbarActionsLogout from "../components/ToolbarActionsLogout";
 
-export default function Layout() {
+export default function DashboardLayout() {
+  const logout = React.useContext(LogoutContext);
+
   return (
-    <DashboardLayout>
+    <CoreDashboardLayout
+      slots={{
+        toolbarActions: () => <ToolbarActionsLogout logout={logout} />,
+      }}
+    >
       <Outlet />
-    </DashboardLayout>
+    </CoreDashboardLayout>
   );
 }
