@@ -13,6 +13,14 @@ interface AuthWrapperProps {
 export function useAuth() {
 	const [user, setUser] = useState<User | null>(null);
 
+	const logout = () => {
+		auth.signOut().then(() => {
+			setUser(null);
+		}).catch((error) => {
+			console.error("Error signing out: ", error);
+		});
+	};
+
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
@@ -41,5 +49,5 @@ export function useAuth() {
 		return <>{children}</>;
 	};
 
-	return { user, AuthWrapper };
+	return { user, AuthWrapper, logout };
 }
