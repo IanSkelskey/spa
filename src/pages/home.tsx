@@ -1,5 +1,4 @@
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import { PageContainer } from "@toolpad/core";
 
 export default function HomePage() {
