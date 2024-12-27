@@ -8,7 +8,7 @@ import { getUserRole } from "./utils/firestore";
 import logo from "./assets/logo.png";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { Badge, Dashboard, People, Person } from "@mui/icons-material";
+import { Badge, Dashboard, Home, People, Person } from "@mui/icons-material";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -24,6 +24,11 @@ function App() {
   const NAVIGATION: Navigation = React.useMemo(() => {
     if (role === "owner" || role === "staff") {
       return [
+        {
+          segment: "",
+          title: "Home",
+          icon: <Home />,
+        },
         {
           kind: "header",
           title: "Main Items",
@@ -46,6 +51,11 @@ function App() {
       ];
     } else if (role === "client") {
       return [
+        {
+          segment: "",
+          title: "Home",
+          icon: <Home />,
+        },
         {
           kind: "header",
           title: "Profile",
