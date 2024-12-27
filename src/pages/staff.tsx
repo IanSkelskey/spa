@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Typography, List, ListItem, ListItemText, Button, Box } from "@mui/material";
+import { Typography, List, ListItem, ListItemText, Button, Box, Tooltip } from "@mui/material";
 import LoadingFallback from "../components/LoadingFallback";
 import User from "../models/User";
 import { getUsersByRole } from "../utils/firestore";
 import { PageContainer } from "@toolpad/core";
 import NewStaffModal from "../components/NewStaffModal";
+import React from "react";
+import { Add } from "@mui/icons-material";
 
 export default function StaffPage() {
 	const [staffUsers, setStaffUsers] = useState<User[]>([]);
@@ -37,12 +39,26 @@ export default function StaffPage() {
 			{staffUsers.length > 0 ? (
 				<List>
 					{staffUsers.map((user) => (
-						<ListItem key={user.email}>
-							<ListItemText
-								primary={`${user.firstName} ${user.lastName}`}
-								secondary={user.email}
-							/>
-						</ListItem>
+						<React.Fragment key={user.email}>
+							<ListItem>
+								<ListItemText
+									primary={`${user.firstName} ${user.lastName}`}
+									secondary={user.email}
+								/>
+							</ListItem>
+							<Box position="fixed" bottom={16} right={16}>
+								<Tooltip title="Create User">
+									<Button
+										variant="contained"
+										color="primary"
+										onClick={handleOpenModal}
+										style={{ borderRadius: "50%", minWidth: "56px", minHeight: "56px" }}
+									>
+										<Add />
+									</Button>
+								</Tooltip>
+							</Box>
+						</React.Fragment>
 					))}
 				</List>
 			) : (
