@@ -1,6 +1,6 @@
 import { createUser } from "../utils/firestore";
 import React, { useState } from 'react';
-import { Modal, Box, TextField, Button, Typography, IconButton } from '@mui/material';
+import { Modal, Box, TextField, Button, Typography, IconButton, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNotifications } from "@toolpad/core";
 
@@ -14,16 +14,19 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');
+	const [loading, setLoading] = useState(false); // Loading state
 	const role = 'staff'; // Set role to 'staff' by default
 
 	const handleSubmit = async () => {
+		setLoading(true); // Set loading to true when the submit starts
 		await createUser(firstName, lastName, email, role).then(() => {
 			notifications.show("Staff member created successfully", { severity: "success", autoHideDuration: 3000 });
 			onClose();
 		}).catch((error) => {
 			notifications.show(`Error creating staff member: ${error.message}`, { severity: "error", autoHideDuration: 3000 });
-		}
-		);
+		}).finally(() => {
+			setLoading(false); // Set loading to false when the submit ends
+		});
 	};
 
 	return (
@@ -66,8 +69,15 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 				/>
-				<Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
-					Create
+				<Button 
+					variant="contained" 
+					color="primary" 
+					onClick={handleSubmit} 
+					sx={{ mt: 2 }} 
+					disabled={loading} // Disable button when loading
+					startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
+				>
+					{loading ? 'Creating...' : 'Create'}
 				</Button>
 			</Box>
 		</Modal>

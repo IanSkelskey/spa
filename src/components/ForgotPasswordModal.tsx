@@ -49,11 +49,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, onClose
 						</IconButton>
 					</Tooltip>
 				</Box>
-				{loading ? (
-					<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-						<CircularProgress />
-					</Box>
-				) : success ? (
+				{success ? (
 					<Typography variant="body2">
 						If an account exists with that email, a link will arrive soon.
 					</Typography>
@@ -71,8 +67,16 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, onClose
 							onChange={(e) => setEmail(e.target.value)}
 							required
 						/>
-						<Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-							Submit
+						<Button 
+							type="submit" 
+							variant="contained" 
+							color="primary" 
+							fullWidth 
+							sx={{ mt: 2 }} 
+							disabled={loading} // Disable button when loading
+							startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
+						>
+							{loading ? 'Submitting...' : 'Submit'}
 						</Button>
 					</form>
 				)}
