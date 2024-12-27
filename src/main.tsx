@@ -16,6 +16,7 @@ const ProfilePage = React.lazy(() => import("./pages/profile"));
 const LoginPage = React.lazy(() => import("./pages/login"));
 const HomePage = React.lazy(() => import("./pages/home"));
 const NotFoundPage = React.lazy(() => import("./pages/404"));
+const ForgotPasswordPage = React.lazy(() => import("./pages/forgot"));
 
 export const LogoutContext = React.createContext<() => void>(() => { });
 
