@@ -13,6 +13,8 @@ const ClientsPage = React.lazy(() => import("./pages/clients"));
 const StaffPage = React.lazy(() => import("./pages/staff"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
 const LoginPage = React.lazy(() => import("./pages/login"));
+const HomePage = React.lazy(() => import("./pages/home"));
+const NotFoundPage = React.lazy(() => import("./pages/404"));
 
 export const LogoutContext = React.createContext<() => void>(() => { });
 
@@ -68,6 +70,10 @@ const router = createBrowserRouter([
             Component: () => <DashboardLayout />,
             children: [
               {
+                path: "",
+                Component: HomePage,
+              },
+              {
                 path: "dashboard",
                 Component: DashboardPage,
               },
@@ -90,7 +96,11 @@ const router = createBrowserRouter([
                     <StaffPage />
                   </ProtectedRoute>
                 ),
-              }
+              },
+              {
+                path: "*", // Catch-all for undefined routes
+                Component: NotFoundPage,
+              },
             ],
           },
         ],
