@@ -2,6 +2,7 @@ import { createUser } from "../utils/firestore";
 import React, { useState } from 'react';
 import { Modal, Box, TextField, Button, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useNotifications } from "@toolpad/core";
 
 interface NewStaffModalProps {
 	open: boolean;
@@ -9,14 +10,20 @@ interface NewStaffModalProps {
 }
 
 const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
+	const notifications = useNotifications(); // Hook for notifications
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');
 	const role = 'staff'; // Set role to 'staff' by default
 
 	const handleSubmit = async () => {
-		await createUser(firstName, lastName, email, role);
-		onClose();
+		await createUser(firstName, lastName, email, role).then(() => {
+			notifications.show("Staff member created successfully", { severity: "success", autoHideDuration: 3000 });
+			onClose();
+		}).catch((error) => {
+			notifications.show(`Error creating staff member: ${error.message}`, { severity: "error", autoHideDuration: 3000 });
+		}
+		);
 	};
 
 	return (

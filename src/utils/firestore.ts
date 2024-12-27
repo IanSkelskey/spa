@@ -31,6 +31,7 @@ export async function createUser(firstName: string, lastName: string, email: str
 		await sendPasswordResetEmail(auth, email);
 	} catch (error) {
 		console.error("Error creating user:", error);
+		
 	}
 }
 

@@ -7,6 +7,7 @@ import { useAuth } from "./utils/useAuth";
 import LoadingFallback from "./components/LoadingFallback";
 import { getUserRole } from "./utils/firestore";
 import { PageContainer } from "@toolpad/core";
+import { NotificationsProvider } from "@toolpad/core/useNotifications";
 
 const DashboardPage = React.lazy(() => import("./pages/index"));
 const ClientsPage = React.lazy(() => import("./pages/clients"));
@@ -118,6 +119,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <NotificationsProvider>
+      <RouterProvider router={router} />
+    </NotificationsProvider>
   </React.StrictMode>
 );
