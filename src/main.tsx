@@ -9,7 +9,7 @@ import { getUserRole } from "./utils/firestore";
 import { PageContainer } from "@toolpad/core";
 import { NotificationsProvider } from "@toolpad/core/useNotifications";
 
-const DashboardPage = React.lazy(() => import("./pages/index"));
+const DashboardPage = React.lazy(() => import("./pages/dashboard"));
 const ClientsPage = React.lazy(() => import("./pages/clients"));
 const StaffPage = React.lazy(() => import("./pages/staff"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
