@@ -1,33 +1,59 @@
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
+import { useEffect, useState } from "react";
+import { Typography, List, ListItem, ListItemText, Button, Box } from "@mui/material";
+import LoadingFallback from "../components/LoadingFallback";
+import User from "../models/User";
+import { getUsersByRole } from "../utils/firestore";
+import { PageContainer } from "@toolpad/core";
+import NewStaffModal from "../components/NewStaffModal";
 
 export default function StaffPage() {
-	const staffMembers = ["Staff A", "Staff B", "Staff C"];
+	const [staffUsers, setStaffUsers] = useState<User[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	useEffect(() => {
+		async function fetchStaffUsers() {
+			const users = await getUsersByRole("staff");
+			setStaffUsers(users);
+			setLoading(false);
+		}
+		fetchStaffUsers();
+	}, []);
+
+	const handleOpenModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+	};
+
+	if (loading) {
+		return <LoadingFallback />;
+	}
 
 	return (
-		<Box
-			sx={{
-				padding: 3,
-				maxWidth: "600px",
-				margin: "0 auto",
-			}}
-		>
-			<Typography variant="h4" gutterBottom>
-				Staff
-			</Typography>
-			<Typography variant="body1" gutterBottom>
-				Below is a list of staff members working in this organization:
-			</Typography>
-			<List>
-				{staffMembers.map((staff, index) => (
-					<ListItem key={index}>
-						<ListItemText primary={staff} />
-					</ListItem>
-				))}
-			</List>
-		</Box>
+		<PageContainer title="Staff Members" maxWidth={false}>
+			{staffUsers.length > 0 ? (
+				<List>
+					{staffUsers.map((user) => (
+						<ListItem key={user.email}>
+							<ListItemText
+								primary={`${user.firstName} ${user.lastName}`}
+								secondary={user.email}
+							/>
+						</ListItem>
+					))}
+				</List>
+			) : (
+				<Box textAlign="center" mt={4}>
+					<Typography variant="body1">No staff members available.</Typography>
+					<Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ mt: 2 }}>
+						Create New Staff Member
+					</Button>
+				</Box>
+			)}
+			<NewStaffModal open={isModalOpen} onClose={handleCloseModal} />
+		</PageContainer>
 	);
 }

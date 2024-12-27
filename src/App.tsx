@@ -30,6 +30,11 @@ function App() {
           icon: <Home />,
         },
         {
+          segment: "profile",
+          title: "Profile",
+          icon: <Person />,
+        },
+        {
           kind: "header",
           title: "Main Items",
         },
