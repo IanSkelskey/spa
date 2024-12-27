@@ -8,7 +8,7 @@ import { getUserRole } from "./utils/firestore";
 import logo from "./assets/logo.png";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { Badge, Dashboard, Person } from "@mui/icons-material";
+import { Badge, Dashboard, People, Person } from "@mui/icons-material";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -36,7 +36,7 @@ function App() {
         {
           segment: "clients",
           title: "Clients",
-          icon: <Person />,
+          icon: <People />,
         },
         {
           segment: "staff",

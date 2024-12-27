@@ -5,6 +5,8 @@ import App from "./App";
 import DashboardLayout from "./layouts/dashboard";
 import { useAuth } from "./utils/useAuth";
 import LoadingFallback from "./components/LoadingFallback";
+import { getUserRole } from "./utils/firestore";
+import { PageContainer } from "@toolpad/core";
 
 const DashboardPage = React.lazy(() => import("./pages/index"));
 const ClientsPage = React.lazy(() => import("./pages/clients"));
@@ -12,7 +14,7 @@ const StaffPage = React.lazy(() => import("./pages/staff"));
 const ProfilePage = React.lazy(() => import("./pages/profile"));
 const LoginPage = React.lazy(() => import("./pages/login"));
 
-export const LogoutContext = React.createContext<() => void>(() => {});
+export const LogoutContext = React.createContext<() => void>(() => { });
 
 const AppWithAuth = () => {
   const { user, login, logout } = useAuth();
@@ -30,6 +32,28 @@ const AppWithAuth = () => {
     </LogoutContext.Provider>
   );
 };
+
+const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) => {
+  const { user } = useAuth();
+  const [role, setRole] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (user && user.email) {
+      getUserRole(user.email).then(setRole);
+    }
+  }, [user]);
+
+  if (role === null) {
+    return <LoadingFallback />;
+  }
+
+  if (!allowedRoles.includes(role)) {
+    return <PageContainer title="Unauthorized">You are not authorized to view this page.</PageContainer>;
+  } else {
+    return <>{children}</>;
+  }
+};
+
 
 const router = createBrowserRouter([
   {
@@ -49,7 +73,11 @@ const router = createBrowserRouter([
               },
               {
                 path: "clients",
-                Component: ClientsPage,
+                element: (
+                  <ProtectedRoute allowedRoles={["staff", "owner"]}>
+                    <ClientsPage />
+                  </ProtectedRoute>
+                ),
               },
               {
                 path: "profile",
@@ -57,7 +85,11 @@ const router = createBrowserRouter([
               },
               {
                 path: "staff",
-                Component: StaffPage,
+                element: (
+                  <ProtectedRoute allowedRoles={["owner"]}>
+                    <StaffPage />
+                  </ProtectedRoute>
+                ),
               }
             ],
           },
