@@ -10,7 +10,7 @@ export default defineConfig({
         name: 'Spa Dashboard',
         short_name: 'Spa',
         description: 'A dashboard application for Spa management.',
-        theme_color: '#ffffff',
+        theme_color: '#A266B0',
         icons: [
           {
             src: '/assets/logo-192.webp',
