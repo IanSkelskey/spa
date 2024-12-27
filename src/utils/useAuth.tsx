@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { getAuth, onAuthStateChanged, sendPasswordResetEmail, User } from "firebase/auth";
 import app from "./firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNotifications } from "@toolpad/core";
@@ -42,6 +42,11 @@ export function useAuth() {
 		}
 	};
 
+	const resetPassword = async (email: string) => {
+		await sendPasswordResetEmail(auth, email);
+		notifications.show("Password reset email sent!", { severity: "success", autoHideDuration: 3000 });
+	}
+
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
@@ -54,5 +59,5 @@ export function useAuth() {
 		return () => unsubscribe();
 	}, []);
 
-	return { user, login, logout };
+	return { user, login, logout, resetPassword };
 }
