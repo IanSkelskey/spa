@@ -1,6 +1,7 @@
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import User from "../models/User";
+import { randomBytes } from "crypto";
 
 const db = getFirestore();
 
@@ -27,7 +28,7 @@ export async function createUser(firstName: string, lastName: string, email: str
 	await setDoc(userDoc, { firstName, lastName, role });
 
 	try {
-		const temporaryPassword = Math.random().toString(36).slice(-8);
+		const temporaryPassword = randomBytes(6).toString('base64').slice(0, 8);
 		await createUserWithEmailAndPassword(auth, email, temporaryPassword);
 		await sendPasswordResetEmail(auth, email);
 	} catch (error) {
