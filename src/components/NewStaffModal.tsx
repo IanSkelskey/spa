@@ -1,6 +1,6 @@
 import { createUser } from "../utils/firestore";
 import React, { useState } from 'react';
-import { Modal, Box, TextField, Button, Typography, IconButton, CircularProgress } from '@mui/material';
+import { Modal, Box, TextField, Button, Typography, IconButton, CircularProgress, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNotifications } from "@toolpad/core";
 
@@ -15,19 +15,27 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');
 	const [loading, setLoading] = useState(false); // Loading state
+	const [error, setError] = useState(''); // Error state
 	const role = 'staff'; // Set role to 'staff' by default
 
 	const handleSubmit = async () => {
+		if (!validateEmail(email)) {
+			setError('Invalid email address');
+			return;
+		}
 		setLoading(true); // Set loading to true when the submit starts
+		setError(''); // Clear any previous errors
 		await createUser(firstName, lastName, email, role).then(() => {
 			notifications.show("Staff member created successfully", { severity: "success", autoHideDuration: 3000 });
 			onClose();
 		}).catch((error) => {
-			notifications.show(`Error creating staff member: ${error.message}`, { severity: "error", autoHideDuration: 3000 });
+			setError(`Error creating staff member: ${error.message}`);
 		}).finally(() => {
 			setLoading(false); // Set loading to false when the submit ends
 		});
 	};
+
+	const isFormValid = firstName && lastName && email; // Check if form is valid
 
 	return (
 		<Modal open={open} onClose={onClose}>
@@ -48,6 +56,7 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 						<CloseIcon />
 					</IconButton>
 				</Box>
+				{error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 				<TextField
 					label="First Name"
 					fullWidth
@@ -74,7 +83,7 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 					color="primary" 
 					onClick={handleSubmit} 
 					sx={{ mt: 2 }} 
-					disabled={loading} // Disable button when loading
+					disabled={loading || !isFormValid} // Disable button when loading or form is invalid
 					startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
 				>
 					{loading ? 'Creating...' : 'Create'}
@@ -85,3 +94,8 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 };
 
 export default NewStaffModal;
+
+function validateEmail(email: string) {
+	const re = /\S+@\S+\.\S+/;
+	return re.test(email);
+}

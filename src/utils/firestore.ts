@@ -27,11 +27,11 @@ export async function createUser(firstName: string, lastName: string, email: str
 	await setDoc(userDoc, { firstName, lastName, role });
 
 	try {
-		await createUserWithEmailAndPassword(auth, email, "temporaryPassword");
+		const temporaryPassword = Math.random().toString(36).slice(-8);
+		await createUserWithEmailAndPassword(auth, email, temporaryPassword);
 		await sendPasswordResetEmail(auth, email);
 	} catch (error) {
 		console.error("Error creating user:", error);
-		
 	}
 }
 
