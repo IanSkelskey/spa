@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AuthProvider, SignInPage } from '@toolpad/core/SignInPage';
 import ForgotPasswordModal from '../components/ForgotPasswordModal';
 import { Link } from 'react-router-dom';
-import { Typography, IconButton, InputAdornment, Tooltip } from '@mui/material';
+import { Typography, IconButton, InputAdornment, Tooltip, FormControlLabel, Checkbox } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
@@ -14,8 +14,32 @@ interface AuthResponse {
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
 const LoginPage = ({ login }: { login: (email: string, password: string) => void | Promise<AuthResponse> }) => {
+	const [rememberMe, setRememberMe] = useState(false);
 	const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
+
+	function RememberMe() {
+		return (
+			<FormControlLabel
+				control={
+					<Checkbox
+						checked={rememberMe}
+						onChange={(event) => setRememberMe(event.target.checked)}
+						color="primary"
+						sx={{ padding: 0.5, '& .MuiSvgIcon-root': { fontSize: 20 } }}
+					/>
+				}
+				slotProps={{
+					typography: {
+						variant: 'body2',
+						color: 'textSecondary',
+					},
+				}}
+				color="textSecondary"
+				label="Remember Me"
+			/>
+		);
+	}
 
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -25,6 +49,11 @@ const LoginPage = ({ login }: { login: (email: string, password: string) => void
 			const password = formData.get('password') as string;
 			const userCredential = await login(email, password);
 			if (userCredential && 'user' in userCredential) {
+				if (rememberMe) {
+					localStorage.setItem('rememberedEmail', email);
+				} else {
+					localStorage.removeItem('rememberedEmail');
+				}
 				return { user: userCredential.user };
 			}
 			return { error: 'Login failed' };
@@ -51,9 +80,14 @@ const LoginPage = ({ login }: { login: (email: string, password: string) => void
 							<Typography variant="body2">Forgot Password?</Typography>
 						</Link>
 					),
+					rememberMe: RememberMe,
 				}}
 				slotProps={{
-					emailField: { label: 'Email', required: true },
+					emailField: {
+						label: 'Email',
+						required: true,
+						defaultValue: localStorage.getItem('rememberedEmail') || '',
+					},
 					passwordField: {
 						label: 'Password',
 						required: true,

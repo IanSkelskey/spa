@@ -18,7 +18,8 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 	const [error, setError] = useState(''); // Error state
 	const role = 'staff'; // Set role to 'staff' by default
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (event: React.FormEvent) => {
+		event.preventDefault(); // Prevent default form submission
 		if (!validateEmail(email)) {
 			setError('Invalid email address');
 			return;
@@ -57,37 +58,39 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 					</IconButton>
 				</Box>
 				{error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-				<TextField
-					label="First Name"
-					fullWidth
-					margin="normal"
-					value={firstName}
-					onChange={(e) => setFirstName(e.target.value)}
-				/>
-				<TextField
-					label="Last Name"
-					fullWidth
-					margin="normal"
-					value={lastName}
-					onChange={(e) => setLastName(e.target.value)}
-				/>
-				<TextField
-					label="Email"
-					fullWidth
-					margin="normal"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<Button 
-					variant="contained" 
-					color="primary" 
-					onClick={handleSubmit} 
-					sx={{ mt: 2 }} 
-					disabled={loading || !isFormValid} // Disable button when loading or form is invalid
-					startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
-				>
-					{loading ? 'Creating...' : 'Create'}
-				</Button>
+				<form onSubmit={handleSubmit}>
+					<TextField
+						label="First Name"
+						fullWidth
+						margin="normal"
+						value={firstName}
+						onChange={(e) => setFirstName(e.target.value)}
+					/>
+					<TextField
+						label="Last Name"
+						fullWidth
+						margin="normal"
+						value={lastName}
+						onChange={(e) => setLastName(e.target.value)}
+					/>
+					<TextField
+						label="Email"
+						fullWidth
+						margin="normal"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+					<Button 
+						variant="contained" 
+						color="primary" 
+						type="submit" 
+						sx={{ mt: 2 }} 
+						disabled={loading || !isFormValid} // Disable button when loading or form is invalid
+						startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
+					>
+						{loading ? 'Creating...' : 'Create'}
+					</Button>
+				</form>
 			</Box>
 		</Modal>
 	);
