@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Modal, Box, TextField, Button, Typography, IconButton, CircularProgress, Alert, Fade } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNotifications } from "@toolpad/core";
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '../utils/firebaseConfig';
 
 interface NewStaffModalProps {
 	open: boolean;
