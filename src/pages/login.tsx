@@ -14,7 +14,7 @@ interface AuthResponse {
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
 const LoginPage = ({ login }: { login: (email: string, password: string) => void | Promise<AuthResponse> }) => {
-	const [rememberMe, setRememberMe] = useState(false);
+	const [rememberMe, setRememberMe] = useState( (localStorage.getItem('rememberedEmail') !== null) ? true : false);
 	const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 
