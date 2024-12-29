@@ -55,7 +55,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ open, onClose
 					</Typography>
 				) : (
 					<form onSubmit={handleSubmit}>
-						<Typography variant='body2' sx={{ mb: 2 }}>
+						<Typography variant='body2' color='textSecondary' sx={{ mb: 2 }}>
 							Enter your email to receive a password reset link.
 						</Typography>
 						<TextField

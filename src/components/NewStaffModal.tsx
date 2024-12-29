@@ -1,6 +1,6 @@
 import { createUser } from "../utils/firestore";
 import React, { useState } from 'react';
-import { Modal, Box, TextField, Button, Typography, IconButton, CircularProgress, Alert } from '@mui/material';
+import { Modal, Box, TextField, Button, Typography, IconButton, CircularProgress, Alert, Fade } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNotifications } from "@toolpad/core";
 
@@ -39,59 +39,62 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 	const isFormValid = firstName && lastName && email; // Check if form is valid
 
 	return (
-		<Modal open={open} onClose={onClose}>
-			<Box sx={{ 
-				position: 'absolute', 
-				top: '50%', 
-				left: '50%', 
-				transform: 'translate(-50%, -50%)', 
-				width: 400, 
-				bgcolor: 'background.paper', 
-				boxShadow: 24, 
-				borderRadius: 1, 
-				p: 4 
-			}}>
-				<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-					<Typography variant="h6">Create New Staff</Typography>
-					<IconButton onClick={onClose}>
-						<CloseIcon />
-					</IconButton>
+		<Modal open={open} onClose={onClose} closeAfterTransition>
+			<Fade in={open}>
+				<Box sx={{ 
+					position: 'absolute', 
+					top: '50%', 
+					left: '50%', 
+					transform: 'translate(-50%, -50%)', 
+					width: 400, 
+					bgcolor: 'background.paper', 
+					boxShadow: 24, 
+					borderRadius: 1, 
+					p: 4 
+				}}>
+					<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+						<Typography variant="h6">Create New Staff</Typography>
+						<IconButton onClick={onClose}>
+							<CloseIcon />
+						</IconButton>
+					</Box>
+					<Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>Enter the details of the new staff member</Typography>
+					{error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+					<form onSubmit={handleSubmit}>
+						<TextField
+							label="First Name"
+							fullWidth
+							margin="normal"
+							value={firstName}
+							onChange={(e) => setFirstName(e.target.value)}
+						/>
+						<TextField
+							label="Last Name"
+							fullWidth
+							margin="normal"
+							value={lastName}
+							onChange={(e) => setLastName(e.target.value)}
+						/>
+						<TextField
+							label="Email"
+							fullWidth
+							margin="normal"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
+						<Button 
+							variant="contained" 
+							color="primary" 
+							type="submit" 
+							sx={{ mt: 2 }} 
+							disabled={loading || !isFormValid} // Disable button when loading or form is invalid
+							startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
+						>
+							{loading ? 'Creating...' : 'Create'}
+						</Button>
+					</form>
 				</Box>
-				{error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-				<form onSubmit={handleSubmit}>
-					<TextField
-						label="First Name"
-						fullWidth
-						margin="normal"
-						value={firstName}
-						onChange={(e) => setFirstName(e.target.value)}
-					/>
-					<TextField
-						label="Last Name"
-						fullWidth
-						margin="normal"
-						value={lastName}
-						onChange={(e) => setLastName(e.target.value)}
-					/>
-					<TextField
-						label="Email"
-						fullWidth
-						margin="normal"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-					/>
-					<Button 
-						variant="contained" 
-						color="primary" 
-						type="submit" 
-						sx={{ mt: 2 }} 
-						disabled={loading || !isFormValid} // Disable button when loading or form is invalid
-						startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
-					>
-						{loading ? 'Creating...' : 'Create'}
-					</Button>
-				</form>
-			</Box>
+			</Fade>
 		</Modal>
 	);
 };
