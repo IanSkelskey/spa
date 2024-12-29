@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged, sendPasswordResetEmail, User } from "firebase/auth";
-import app from "./firebaseConfig";
+import { app } from "./firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNotifications } from "@toolpad/core";
 

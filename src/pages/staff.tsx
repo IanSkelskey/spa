@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Typography, List, ListItem, ListItemText, Button, Box, Tooltip } from "@mui/material";
 import LoadingFallback from "../components/LoadingFallback";
 import User from "../models/User";
-import { getUsersByRole } from "../utils/firestore";
 import { PageContainer } from "@toolpad/core";
 import NewStaffModal from "../components/NewStaffModal";
 import { Add } from "@mui/icons-material";
@@ -14,9 +13,16 @@ export default function StaffPage() {
 
 	useEffect(() => {
 		async function fetchStaffUsers() {
-			const users = await getUsersByRole("staff");
-			setStaffUsers(users);
-			setLoading(false);
+			fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/getUsersByRole?role=staff`)
+				.then((response) => response.json())
+				.then((users) => {
+					setStaffUsers(users);
+					setLoading(false);
+				})
+				.catch((error) => {
+					console.error("Error fetching staff users:", error);
+					setLoading(false);
+				});
 		}
 		fetchStaffUsers();
 	}, []);

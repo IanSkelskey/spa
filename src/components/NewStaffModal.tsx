@@ -1,8 +1,9 @@
-import { createUser } from "../utils/firestore";
 import React, { useState } from 'react';
 import { Modal, Box, TextField, Button, Typography, IconButton, CircularProgress, Alert, Fade } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNotifications } from "@toolpad/core";
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../utils/firebaseConfig';
 
 interface NewStaffModalProps {
 	open: boolean;
@@ -26,12 +27,27 @@ const NewStaffModal: React.FC<NewStaffModalProps> = ({ open, onClose }) => {
 		}
 		setLoading(true); // Set loading to true when the submit starts
 		setError(''); // Clear any previous errors
-		await createUser(firstName, lastName, email, role).then(() => {
+		fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/createUser`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ firstName, lastName, email, role }),
+		})
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response;
+		})
+		.then(() => {
 			notifications.show("Staff member created successfully", { severity: "success", autoHideDuration: 3000 });
 			onClose();
-		}).catch((error) => {
+		})
+		.catch((error: Error) => {
 			setError(`Error creating staff member: ${error.message}`);
-		}).finally(() => {
+		})
+		.finally(() => {
 			setLoading(false); // Set loading to false when the submit ends
 		});
 	};

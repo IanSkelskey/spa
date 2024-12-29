@@ -4,7 +4,6 @@ import type { Navigation } from "@toolpad/core";
 import { useMediaQuery } from "@mui/material";
 import { lightTheme, darkTheme } from "./utils/theme";
 import { useAuth } from "./utils/useAuth";
-import { getUserRole } from "./utils/firestore";
 import logo from "./assets/logo.png";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
@@ -17,7 +16,16 @@ function App() {
 
   React.useEffect(() => {
     if (user && user.email) {
-      getUserRole(user.email).then(setRole);
+      fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/getUserRole?email=${user.email}`)
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setRole(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user role:", error);
+        setRole(null); // Handle error
+      });
     }
   }, [user]);
 

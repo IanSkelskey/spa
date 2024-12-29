@@ -5,7 +5,6 @@ import App from "./App";
 import DashboardLayout from "./layouts/dashboard";
 import { useAuth } from "./utils/useAuth";
 import LoadingFallback from "./components/LoadingFallback";
-import { getUserRole } from "./utils/firestore";
 import { PageContainer } from "@toolpad/core";
 import { NotificationsProvider } from "@toolpad/core/useNotifications";
 
@@ -39,24 +38,37 @@ const AppWithAuth = () => {
 const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) => {
   const { user } = useAuth();
   const [role, setRole] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     if (user && user.email) {
-      getUserRole(user.email).then(setRole);
+      setLoading(true);
+      fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/getUserRole?email=${user.email}`)
+        .then((response) => response.text())
+        .then((role) => {
+          setRole(role);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching user role:", error);
+          setRole(null); // Handle error
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
   }, [user]);
 
-  if (role === null) {
+  if (loading) {
     return <LoadingFallback />;
   }
 
-  if (!allowedRoles.includes(role)) {
+  if (!allowedRoles.includes(role!)) {
     return <PageContainer title="Unauthorized">You are not authorized to view this page.</PageContainer>;
   } else {
     return <>{children}</>;
   }
 };
-
 
 const router = createBrowserRouter([
   {
