@@ -11,7 +11,7 @@ export default function DashboardLayout() {
   return (
     <CoreDashboardLayout
       slots={{
-		sidebarFooter: SidebarFooter,
+        sidebarFooter: SidebarFooter,
         toolbarActions: () => <ToolbarActionsLogout logout={logout} />,
       }}
     >

@@ -62,7 +62,7 @@ function App() {
           segment: "staff",
           title: "Staff",
           icon: <Badge />,
-        }
+        },
       ];
     } else if (role === "client") {
       return [
@@ -100,7 +100,11 @@ function App() {
               height: "100%",
             }}
           >
-            <img src={logo} alt="Spa Dashboard" style={{ borderRadius: "50%", width: 32, height: 32 }} />
+            <img
+              src={logo}
+              alt="Spa Dashboard"
+              style={{ borderRadius: "50%", width: 32, height: 32 }}
+            />
           </Box>
         ),
       }}

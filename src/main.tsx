@@ -17,7 +17,7 @@ const LoginPage = React.lazy(() => import("./pages/login"));
 const HomePage = React.lazy(() => import("./pages/home"));
 const NotFoundPage = React.lazy(() => import("./pages/404"));
 
-export const LogoutContext = React.createContext<() => void>(() => { });
+export const LogoutContext = React.createContext<() => void>(() => {});
 
 const AppWithAuth = () => {
   const { user, login, logout } = useAuth();
@@ -36,7 +36,13 @@ const AppWithAuth = () => {
   );
 };
 
-const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode; allowedRoles: string[] }) => {
+const ProtectedRoute = ({
+  children,
+  allowedRoles,
+}: {
+  children: React.ReactNode;
+  allowedRoles: string[];
+}) => {
   const { user } = useAuth();
   const [role, setRole] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -67,7 +73,11 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode;
   }
 
   if (!allowedRoles.includes(role!)) {
-    return <PageContainer title="Unauthorized">You are not authorized to view this page.</PageContainer>;
+    return (
+      <PageContainer title="Unauthorized">
+        You are not authorized to view this page.
+      </PageContainer>
+    );
   } else {
     return <>{children}</>;
   }
@@ -126,7 +136,7 @@ const router = createBrowserRouter([
         Component: () => {
           const { login } = useAuth();
           return <LoginPage login={login} />;
-        },  // Ensure the login page is accessible directly via /login
+        }, // Ensure the login page is accessible directly via /login
       },
     ],
   },
@@ -137,5 +147,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <NotificationsProvider>
       <RouterProvider router={router} />
     </NotificationsProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
