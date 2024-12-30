@@ -5,6 +5,7 @@ import User from "../models/User";
 import { PageContainer } from "@toolpad/core";
 import NewStaffModal from "../components/NewStaffModal";
 import { Add } from "@mui/icons-material";
+import { getUsersByRole } from "../utils/firestore";
 
 export default function StaffPage() {
 	const [staffUsers, setStaffUsers] = useState<User[]>([]);
@@ -13,16 +14,14 @@ export default function StaffPage() {
 
 	useEffect(() => {
 		async function fetchStaffUsers() {
-			fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/getUsersByRole?role=staff`)
-				.then((response) => response.json())
-				.then((users) => {
-					setStaffUsers(users);
-					setLoading(false);
-				})
-				.catch((error) => {
-					console.error("Error fetching staff users:", error);
-					setLoading(false);
-				});
+			try {
+				const users = await getUsersByRole("staff");
+				setStaffUsers(users);
+			} catch (error) {
+				console.error("Error fetching staff users:", error);
+			} finally {
+				setLoading(false);
+			}
 		}
 		fetchStaffUsers();
 	}, []);
@@ -56,15 +55,17 @@ function StaffList({ staffUsers, handleOpenModal }: StaffListProps) {
 	return (
 		<>
 			{staffUsers.length > 0 ? (
-				<><List key={'staff-list'}>
-					{staffUsers.map((user, index) => (
-						<ListItem key={`${user.email}-${index}`}>
-							<ListItemText
-								primary={`${user.firstName} ${user.lastName}`}
-								secondary={user.email} />
-						</ListItem>
-					))}
-				</List><Box position="fixed" bottom={16} right={16}>
+				<>
+					<List key={'staff-list'}>
+						{staffUsers.map((user, index) => (
+							<ListItem key={`${user.email}-${index}`}>
+								<ListItemText
+									primary={`${user.firstName} ${user.lastName}`}
+									secondary={user.email} />
+							</ListItem>
+						))}
+					</List>
+					<Box position="fixed" bottom={16} right={16}>
 						<Tooltip title="Create new staff">
 							<Button
 								variant="contained"
@@ -75,11 +76,15 @@ function StaffList({ staffUsers, handleOpenModal }: StaffListProps) {
 								<Add />
 							</Button>
 						</Tooltip>
-					</Box></>
+					</Box>
+				</>
 			) : (
-				<><Typography variant="body1">No staff members available.</Typography><Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ mt: 2 }}>
-					Create New Staff Member
-				</Button></>
+				<>
+					<Typography variant="body1">No staff members available.</Typography>
+					<Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ mt: 2 }}>
+						Create New Staff Member
+					</Button>
+				</>
 			)}
 		</>
 	);

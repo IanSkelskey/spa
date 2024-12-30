@@ -4,7 +4,7 @@ import type { Navigation } from "@toolpad/core";
 import { useMediaQuery } from "@mui/material";
 import { lightTheme, darkTheme } from "./utils/theme";
 import { useAuth } from "./utils/useAuth";
-import logo from "./assets/logo-32.png";
+import logo from "./assets/logo.svg";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { Badge, Dashboard, Home, People, Person } from "@mui/icons-material";
@@ -98,7 +98,7 @@ function App() {
               height: "100%",
             }}
           >
-            <img src={logo} alt="Spa Dashboard" style={{ borderRadius: "50%" }} />
+            <img src={logo} alt="Spa Dashboard" style={{ borderRadius: "50%", width: 32, height: 32 }} />
           </Box>
         ),
       }}
