@@ -71,15 +71,15 @@ function NoStaffPage({ createNewStaff }: { createNewStaff: () => void }) {
             <Typography variant="body1" color="textSecondary" paragraph>
                 You can add new staff members by clicking the button below.
             </Typography>
-			<Button
-				variant="contained"
-				color="primary"
-				onClick={createNewStaff}
-				sx={{ mt: 2 }}
-				startIcon={<Add />}
-			>
-				Create New Staff Member
-			</Button>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={createNewStaff}
+                sx={{ mt: 2 }}
+                startIcon={<Add />}
+            >
+                Create New Staff Member
+            </Button>
         </Box>
     );
 }
