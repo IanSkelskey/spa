@@ -8,6 +8,7 @@ import logo from "./assets/logo.svg";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { Badge, Dashboard, Home, People, Person } from "@mui/icons-material";
+import { getUserRole } from "./utils/firestore";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -15,18 +16,19 @@ function App() {
   const [role, setRole] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (user && user.email) {
-      fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/getUserRole?email=${user.email}`)
-        .then((response) => response.text())
-        .then((data) => {
-          console.log(data);
-          setRole(data);
-        })
-        .catch((error) => {
+    const fetchUserRole = async () => {
+      if (user && user.email) {
+        try {
+          const role = await getUserRole(user.email);
+          setRole(role);
+        } catch (error) {
           console.error("Error fetching user role:", error);
           setRole(null); // Handle error
-        });
-    }
+        }
+      }
+    };
+
+    fetchUserRole();
   }, [user]);
 
   const NAVIGATION: Navigation = React.useMemo(() => {
