@@ -7,6 +7,7 @@ import { useAuth } from "./utils/useAuth";
 import LoadingFallback from "./components/LoadingFallback";
 import { PageContainer } from "@toolpad/core";
 import { NotificationsProvider } from "@toolpad/core/useNotifications";
+import { getUserRole } from "./utils/firestore";
 
 const DashboardPage = React.lazy(() => import("./pages/dashboard"));
 const ClientsPage = React.lazy(() => import("./pages/clients"));
@@ -41,22 +42,24 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode;
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (user && user.email) {
-      setLoading(true);
-      fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/getUserRole?email=${user.email}`)
-        .then((response) => response.text())
-        .then((role) => {
+    const fetchUserRole = async () => {
+      if (user && user.email) {
+        setLoading(true);
+        try {
+          const role = await getUserRole(user.email);
           setRole(role);
-          setLoading(false);
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("Error fetching user role:", error);
           setRole(null); // Handle error
+        } finally {
           setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    fetchUserRole();
   }, [user]);
 
   if (loading) {
