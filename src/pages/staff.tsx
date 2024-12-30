@@ -7,9 +7,9 @@ import {
 } from "@mui/material";
 import User from "../models/User";
 import { PageContainer } from "@toolpad/core";
-import NewStaffModal from "../components/NewStaffModal";
 import { getUsersByRole } from "../utils/firestore";
 import UserTable from "../components/UserTable";
+import NewUserModal from "../components/NewUserModal";
 
 export default function StaffPage() {
 	const [staffUsers, setStaffUsers] = useState<User[]>([]);
@@ -42,13 +42,13 @@ export default function StaffPage() {
 			) : (
 				<>
 					{ staffUsers.length > 0 ? (
-						<UserTable users={staffUsers} createAction={handleOpenModal} />
+						<UserTable role="staff" users={staffUsers} createAction={handleOpenModal} />
 					) : (
 						<NoStaffPage createNewStaff={handleOpenModal} />
 					)}
 				</>
 			)}
-			<NewStaffModal open={isModalOpen} onClose={handleCloseModal} />
+			<NewUserModal open={isModalOpen} onClose={handleCloseModal} role="staff" />
 		</PageContainer>
 	);
 }

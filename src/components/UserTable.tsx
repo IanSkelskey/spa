@@ -7,9 +7,10 @@ import { Add } from '@mui/icons-material';
 interface UserTableProps {
 	users: User[];
 	createAction: () => void;
+	role?: string;
 }
 
-const UserTable: React.FC<UserTableProps> = ({ users, createAction }) => {
+const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
 	const columns: GridColDef[] = [
 		{ field: 'firstName', headerName: 'First name', width: 150 },
 		{ field: 'lastName', headerName: 'Last name', width: 150 },
@@ -18,6 +19,26 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction }) => {
 	];
 
 	const rows = users.map((user, index) => ({ ...user, id: index }));
+
+	const CustomToolbar: React.FC = () => {
+		return (
+			<GridToolbarContainer style={{ padding: '4px 16px' }}>
+				<GridToolbarColumnsButton />
+				<GridToolbarFilterButton />
+				<GridToolbarDensitySelector />
+				<GridToolbarExport />
+				<Tooltip title={`Create new ${role || 'user'}`}>
+					<Button
+						color="primary"
+						startIcon={<Add />}
+						onClick={createAction}
+					>
+						New {role || 'user'}
+					</Button>
+				</Tooltip>
+			</GridToolbarContainer>
+		);
+	};
 
 	return (
 		<>
@@ -28,34 +49,10 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction }) => {
 				pageSizeOptions={[5]}
 				checkboxSelection
 				slots={{
-					toolbar: () => <CustomToolbar createAction={createAction} />,
+					toolbar: () => <CustomToolbar />,
 				}}
 			/>
 		</>
-	);
-};
-
-interface CustomToolbarProps {
-	createAction: () => void;
-}
-
-const CustomToolbar: React.FC<CustomToolbarProps> = ({ createAction }) => {
-	return (
-		<GridToolbarContainer style={{ padding: '4px 16px' }}>
-			<GridToolbarColumnsButton />
-			<GridToolbarFilterButton />
-			<GridToolbarDensitySelector />
-			<GridToolbarExport />
-			<Tooltip title="Create new staff">
-				<Button
-					color="primary"
-					startIcon={<Add />}
-					onClick={createAction}
-				>
-					New staff
-				</Button>
-			</Tooltip>
-		</GridToolbarContainer>
 	);
 };
 
