@@ -8,15 +8,11 @@
     "headers": [
       {
         "source": "/manifest.json",
-        "headers": [
-          { "key": "Content-Type", "value": "application/json" }
-        ]
+        "headers": [{ "key": "Content-Type", "value": "application/json" }]
       },
       {
         "source": "/robots.txt",
-        "headers": [
-          { "key": "Content-Type", "value": "text/plain" }
-        ]
+        "headers": [{ "key": "Content-Type", "value": "text/plain" }]
       },
       {
         "source": "/service-worker.js",
@@ -27,8 +23,6 @@
       }
     ],
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      { "source": "**", "destination": "/index.html" }
-    ]
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
   }
 }
