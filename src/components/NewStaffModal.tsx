@@ -1,6 +1,6 @@
 // src/components/NewStaffModal.tsx
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, CircularProgress, Alert } from '@mui/material';
+import { TextField, Button, Typography, CircularProgress, Alert } from '@mui/material';
 import { useNotifications } from "@toolpad/core";
 import { createUser } from "../utils/firestore";
 import User from '../models/User';

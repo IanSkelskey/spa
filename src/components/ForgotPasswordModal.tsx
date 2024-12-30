@@ -1,6 +1,6 @@
 // src/components/ForgotPasswordModal.tsx
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material';
+import { TextField, Button, Typography, CircularProgress } from '@mui/material';
 import { useAuth } from '../utils/useAuth';
 import ReusableModal from './ReusableModal';
 
