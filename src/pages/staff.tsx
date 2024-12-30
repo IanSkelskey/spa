@@ -5,6 +5,7 @@ import { PageContainer } from '@toolpad/core';
 import { getUsersByRole } from '../utils/firestore';
 import UserTable from '../components/UserTable';
 import NewUserModal from '../components/NewUserModal';
+import { Add } from '@mui/icons-material';
 
 export default function StaffPage() {
     const [staffUsers, setStaffUsers] = useState<User[]>([]);
@@ -75,6 +76,7 @@ function NoStaffPage({ createNewStaff }: { createNewStaff: () => void }) {
                 color="primary"
                 onClick={createNewStaff}
                 sx={{ mt: 2 }}
+                startIcon={<Add />}
             >
                 Create New Staff Member
             </Button>

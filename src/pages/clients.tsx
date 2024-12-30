@@ -5,6 +5,7 @@ import { PageContainer } from '@toolpad/core';
 import { getUsersByRole } from '../utils/firestore';
 import UserTable from '../components/UserTable';
 import NewUserModal from '../components/NewUserModal';
+import { Add } from '@mui/icons-material';
 
 export default function ClientsPage() {
     const [clientUsers, setClientUsers] = useState<User[]>([]);
@@ -74,6 +75,7 @@ function NoClientsPage({ createNewClient }: { createNewClient: () => void }) {
                 color="primary"
                 onClick={createNewClient}
                 sx={{ mt: 2 }}
+                startIcon={<Add />}
             >
                 Create New Client
             </Button>

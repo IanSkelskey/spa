@@ -161,7 +161,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
                     rows={rows}
                     columns={columns}
                     pagination
-                    pageSizeOptions={[5]}
+                    pageSizeOptions={[25, 50, 100]}
                     checkboxSelection
                     slots={{
                         toolbar: () => <CustomToolbar />,
