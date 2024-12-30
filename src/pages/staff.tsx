@@ -5,6 +5,7 @@ import { PageContainer } from '@toolpad/core';
 import { getUsersByRole } from '../utils/firestore';
 import UserTable from '../components/UserTable';
 import NewUserModal from '../components/NewUserModal';
+import { Add } from '@mui/icons-material';
 
 export default function StaffPage() {
     const [staffUsers, setStaffUsers] = useState<User[]>([]);
@@ -70,14 +71,15 @@ function NoStaffPage({ createNewStaff }: { createNewStaff: () => void }) {
             <Typography variant="body1" color="textSecondary" paragraph>
                 You can add new staff members by clicking the button below.
             </Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={createNewStaff}
-                sx={{ mt: 2 }}
-            >
-                Create New Staff Member
-            </Button>
+			<Button
+				variant="contained"
+				color="primary"
+				onClick={createNewStaff}
+				sx={{ mt: 2 }}
+				startIcon={<Add />}
+			>
+				Create New Staff Member
+			</Button>
         </Box>
     );
 }

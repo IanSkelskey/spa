@@ -1,10 +1,13 @@
-import { Button } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function ToolbarActionsLogout({ logout }: { logout: () => void }) {
     return (
-        <Button variant="contained" color="primary" onClick={() => logout()}>
-            Logout
-        </Button>
+        <Tooltip title="Logout">
+            <IconButton color="primary" onClick={logout}>
+                <LogoutIcon />
+            </IconButton>
+        </Tooltip>
     );
 }
 
