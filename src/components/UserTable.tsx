@@ -41,7 +41,7 @@ interface CustomToolbarProps {
 
 const CustomToolbar: React.FC<CustomToolbarProps> = ({ createAction }) => {
 	return (
-		<GridToolbarContainer>
+		<GridToolbarContainer style={{ padding: '4px 16px' }}>
 			<GridToolbarColumnsButton />
 			<GridToolbarFilterButton />
 			<GridToolbarDensitySelector />
