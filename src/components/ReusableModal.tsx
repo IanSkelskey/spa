@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Box, Typography, IconButton, Tooltip, Zoom, Fade } from '@mui/material';
+import { Modal, Box, Typography, IconButton, Tooltip, Zoom, Fade, useMediaQuery, Theme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface ReusableModalProps {
@@ -10,6 +10,8 @@ interface ReusableModalProps {
 }
 
 const ReusableModal: React.FC<ReusableModalProps> = ({ open, onClose, title, children }) => {
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
   return (
     <Modal open={open} onClose={onClose} closeAfterTransition>
       <Fade in={open} timeout={300}>
@@ -18,16 +20,20 @@ const ReusableModal: React.FC<ReusableModalProps> = ({ open, onClose, title, chi
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          outline: 0
+          outline: 0,
+          width: isMobile ? '100%' : 400,
+          height: isMobile ? '100%' : 'auto',
+          maxHeight: isMobile ? '100%' : '80vh',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          borderRadius: isMobile ? 0 : 1,
+          p: 4,
         }}>
           <Zoom in={open} timeout={300}>
             <Box sx={{
-              width: 400,
-              maxHeight: '80vh',
-              bgcolor: 'background.paper',
-              boxShadow: 24,
-              borderRadius: 1,
-              p: 4
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
             }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6">{title}</Typography>
@@ -37,7 +43,9 @@ const ReusableModal: React.FC<ReusableModalProps> = ({ open, onClose, title, chi
                   </IconButton>
                 </Tooltip>
               </Box>
-              {children}
+              <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                {children}
+              </Box>
             </Box>
           </Zoom>
         </Box>
