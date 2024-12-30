@@ -4,7 +4,7 @@ import type { Navigation } from "@toolpad/core";
 import { useMediaQuery } from "@mui/material";
 import { lightTheme, darkTheme } from "./utils/theme";
 import { useAuth } from "./utils/useAuth";
-import logo from "./assets/logo.png";
+import logo from "./assets/logo-32.png";
 import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { Badge, Dashboard, Home, People, Person } from "@mui/icons-material";
@@ -17,15 +17,15 @@ function App() {
   React.useEffect(() => {
     if (user && user.email) {
       fetch(`https://us-central1-the-spa-84a52.cloudfunctions.net/getUserRole?email=${user.email}`)
-      .then((response) => response.text())
-      .then((data) => {
-        console.log(data);
-        setRole(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user role:", error);
-        setRole(null); // Handle error
-      });
+        .then((response) => response.text())
+        .then((data) => {
+          console.log(data);
+          setRole(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user role:", error);
+          setRole(null); // Handle error
+        });
     }
   }, [user]);
 
@@ -98,7 +98,7 @@ function App() {
               height: "100%",
             }}
           >
-            <img src={logo} alt="Spa Dashboard" />
+            <img src={logo} alt="Spa Dashboard" style={{ borderRadius: "50%" }} />
           </Box>
         ),
       }}
