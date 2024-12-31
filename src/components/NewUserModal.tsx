@@ -6,6 +6,7 @@ import {
     Typography,
     CircularProgress,
     Alert,
+    Tooltip,
 } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
 import { createUser } from '../utils/firestore';
@@ -91,16 +92,20 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    sx={{ mt: 2 }}
-                    disabled={loading || !isFormValid} // Disable button when loading or form is invalid
-                    startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
-                >
-                    {loading ? 'Creating...' : 'Create'}
-                </Button>
+                <Tooltip title="Create new user" arrow>
+                    <span>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            sx={{ mt: 2 }}
+                            disabled={loading || !isFormValid} // Disable button when loading or form is invalid
+                            startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
+                        >
+                            {loading ? 'Creating...' : 'Create'}
+                        </Button>
+                    </span>
+                </Tooltip>
             </form>
         </ReusableModal>
     );

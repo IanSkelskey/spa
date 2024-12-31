@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Typography, Button, Box, CircularProgress } from '@mui/material';
 import User from '../models/User';
 import { PageContainer } from '@toolpad/core';
-import { getUsersByRole } from '../utils/firestore';
+import { getUsersByRole, deleteUser } from '../utils/firestore';
 import UserTable from '../components/UserTable';
 import NewUserModal from '../components/NewUserModal';
 import { Add } from '@mui/icons-material';
@@ -29,6 +29,17 @@ export default function ClientsPage() {
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
 
+    const handleDeleteUser = async (email: string) => {
+        try {
+            await deleteUser(email);
+            setClientUsers((prevUsers) =>
+                prevUsers.filter((user) => user.email !== email)
+            );
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
     return (
         <PageContainer title="Clients" maxWidth={false}>
             {loading ? (
@@ -46,6 +57,7 @@ export default function ClientsPage() {
                         <UserTable
                             users={clientUsers}
                             createAction={handleOpenModal}
+                            deleteAction={handleDeleteUser}
                         />
                     ) : (
                         <NoClientsPage createNewClient={handleOpenModal} />
