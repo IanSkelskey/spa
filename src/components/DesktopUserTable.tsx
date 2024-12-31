@@ -11,7 +11,7 @@ import {
 } from '@mui/x-data-grid';
 import User from '../models/User';
 import { Button, Tooltip, IconButton } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import { Add, Delete, Info } from '@mui/icons-material';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 import { Link } from 'react-router-dom';
 
@@ -56,31 +56,28 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
     const columns: GridColDef[] = [
         { field: 'firstName', headerName: 'First name', width: 150 },
         { field: 'lastName', headerName: 'Last name', width: 150 },
-        {
-            field: 'email',
-            headerName: 'Email',
-            width: 200,
-            renderCell: (params) => (
-                <Link
-                    to={`/clients/${params.value}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                    {params.value}
-                </Link>
-            ),
-        },
+        { field: 'email', headerName: 'Email', width: 200 },
         { field: 'role', headerName: 'Role', width: 150 },
         {
             field: 'actions',
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
-                <IconButton
-                    color="error"
-                    onClick={() => handleDeleteClick(params.row as User)}
-                >
-                    <Delete />
-                </IconButton>
+                <>
+                    <Link to={`/clients/${params.row.email}`}>
+                        <Tooltip title="View Details">
+                            <IconButton color="primary">
+                                <Info />
+                            </IconButton>
+                        </Tooltip>
+                    </Link>
+                    <IconButton
+                        color="error"
+                        onClick={() => handleDeleteClick(params.row as User)}
+                    >
+                        <Delete />
+                    </IconButton>
+                </>
             ),
         },
     ];
