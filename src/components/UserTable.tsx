@@ -21,7 +21,6 @@ import {
 	ListItemIcon,
 	Fab,
 	IconButton,
-	Box,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
@@ -64,14 +63,14 @@ const UserTable: React.FC<UserTableProps> = ({
 	};
 
 	const handleBatchDeleteClick = () => {
-		const selected = users.filter((user, index) => checked.includes(index));
+		const selected = users.filter((_user, index) => checked.includes(index));
 		setSelectedUsers(selected);
 		setIsDeleteModalOpen(true);
 	};
 
 	const handleConfirmDelete = async () => {
 		for (const user of selectedUsers) {
-			await deleteAction(user.email);
+			deleteAction(user.email);
 		}
 		setIsDeleteModalOpen(false);
 		setChecked([]);
