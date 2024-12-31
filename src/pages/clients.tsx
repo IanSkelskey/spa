@@ -1,4 +1,3 @@
-// src/pages/clients.tsx
 import { useEffect, useState } from 'react';
 import { Typography, Button, Box, CircularProgress } from '@mui/material';
 import User from '../models/User';
@@ -63,6 +62,7 @@ export default function ClientsPage() {
                             users={clientUsers}
                             createAction={handleOpenModal}
                             deleteAction={handleDeleteUser}
+                            role="client"
                         />
                     ) : (
                         <NoClientsPage createNewClient={handleOpenModal} />

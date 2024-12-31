@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
+import { Link } from 'react-router-dom';
 
 interface UserTableProps {
     users: User[];
@@ -86,12 +87,12 @@ const UserTable: React.FC<UserTableProps> = ({
             headerName: 'Email',
             width: 200,
             renderCell: (params) => (
-                <a
-                    href={`mailto:${params.value}`}
+                <Link
+                    to={`/clients/${params.value}`}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                     {params.value}
-                </a>
+                </Link>
             ),
         },
         { field: 'role', headerName: 'Role', width: 150 },
