@@ -45,7 +45,8 @@ const LoginPageMobile: React.FC<LoginPageMobileProps> = ({
     setError,
     handleSubmit,
 }) => {
-    const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
+    const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] =
+        useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -55,7 +56,9 @@ const LoginPageMobile: React.FC<LoginPageMobileProps> = ({
                 control={
                     <Checkbox
                         checked={rememberMe}
-                        onChange={(event) => setRememberMe(event.target.checked)}
+                        onChange={(event) =>
+                            setRememberMe(event.target.checked)
+                        }
                         color="primary"
                         sx={{
                             padding: 0.5,
@@ -87,10 +90,20 @@ const LoginPageMobile: React.FC<LoginPageMobileProps> = ({
                     padding: 2,
                 }}
             >
-                <Typography variant="h5" gutterBottom fontWeight="bold" align="center">
+                <Typography
+                    variant="h5"
+                    gutterBottom
+                    fontWeight="bold"
+                    align="center"
+                >
                     Sign In to the Spa Dashboard
                 </Typography>
-                <Typography variant="body2" gutterBottom color="textSecondary" align="center">
+                <Typography
+                    variant="body2"
+                    gutterBottom
+                    color="textSecondary"
+                    align="center"
+                >
                     Welcome, please sign in to continue
                 </Typography>
                 <form onSubmit={handleSubmit} style={{ width: '100%' }}>
@@ -119,14 +132,22 @@ const LoginPageMobile: React.FC<LoginPageMobileProps> = ({
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <Tooltip
-                                        title={showPassword ? 'Hide password' : 'Show password'}
+                                        title={
+                                            showPassword
+                                                ? 'Hide password'
+                                                : 'Show password'
+                                        }
                                     >
                                         <IconButton
                                             aria-label="toggle password visibility"
                                             onClick={handleClickShowPassword}
                                             edge="end"
                                         >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            {showPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
                                         </IconButton>
                                     </Tooltip>
                                 </InputAdornment>
@@ -142,11 +163,25 @@ const LoginPageMobile: React.FC<LoginPageMobileProps> = ({
                             mt: 2,
                         }}
                     >
-                        <Link onClick={() => setForgotPasswordModalOpen(true)} to={''}>
-                            <Typography variant="body2">Forgot Password?</Typography>
+                        <Link
+                            onClick={() => setForgotPasswordModalOpen(true)}
+                            to={''}
+                        >
+                            <Typography variant="body2">
+                                Forgot Password?
+                            </Typography>
                         </Link>
-                        <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                            {loading ? <CircularProgress size={24} /> : 'Sign In'}
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <CircularProgress size={24} />
+                            ) : (
+                                'Sign In'
+                            )}
                         </Button>
                     </Box>
                 </form>

@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-    TextField,
-    Button,
-    CircularProgress,
-    Alert,
-} from '@mui/material';
+import { TextField, Button, CircularProgress, Alert } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
 import User from '../../models/User';
 import ReusableModal from './ReusableModal';
@@ -61,7 +56,11 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
     };
 
     return (
-        <ReusableModal open={open} onClose={onClose} title={`Create New ${role}`}>
+        <ReusableModal
+            open={open}
+            onClose={onClose}
+            title={`Create New ${role}`}
+        >
             <form onSubmit={handleSubmit}>
                 {error && <Alert severity="error">{error}</Alert>}
                 <TextField

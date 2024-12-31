@@ -34,7 +34,8 @@ const LoginPageDesktop: React.FC<LoginPageDesktopProps> = ({
     showPassword,
     setShowPassword,
 }) => {
-    const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
+    const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] =
+        useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -44,7 +45,9 @@ const LoginPageDesktop: React.FC<LoginPageDesktopProps> = ({
                 control={
                     <Checkbox
                         checked={rememberMe}
-                        onChange={(event) => setRememberMe(event.target.checked)}
+                        onChange={(event) =>
+                            setRememberMe(event.target.checked)
+                        }
                         color="primary"
                         sx={{
                             padding: 0.5,
