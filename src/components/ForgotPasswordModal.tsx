@@ -32,7 +32,16 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
     };
 
     return (
-        <ReusableModal open={open} onClose={onClose} title="Forgot Password">
+        <ReusableModal
+            open={open}
+            onClose={() => {
+                onClose();
+                setEmail('');
+                setLoading(false);
+                setSuccess(false);
+            }}
+            title="Forgot Password"
+        >
             {success ? (
                 <Typography variant="body2">
                     If an account exists with that email, a link will arrive

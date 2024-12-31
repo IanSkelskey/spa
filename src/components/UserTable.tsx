@@ -10,29 +10,39 @@ import {
 } from '@mui/x-data-grid';
 import User from '../models/User';
 import {
-    Button,
-    Tooltip,
-    List,
-    ListItem,
-    ListItemText,
-    useMediaQuery,
-    useTheme,
-    Checkbox,
-    ListItemIcon,
-    Fab,
+	Button,
+	Tooltip,
+	List,
+	ListItem,
+	ListItemText,
+	useMediaQuery,
+	useTheme,
+	Checkbox,
+	ListItemIcon,
+	Fab,
+	IconButton,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Add, Delete } from '@mui/icons-material';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 
 interface UserTableProps {
     users: User[];
     createAction: () => void;
+    deleteAction: (email: string) => void;
     role?: string;
 }
 
-const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
+const UserTable: React.FC<UserTableProps> = ({
+    users,
+    createAction,
+    deleteAction,
+    role,
+}) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [checked, setChecked] = useState<number[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const handleToggle = (value: number) => () => {
         const currentIndex = checked.indexOf(value);
@@ -46,6 +56,25 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
 
         setChecked(newChecked);
     };
+
+    const handleDeleteClick = (user: User) => {
+        setSelectedUsers([user]);
+        setIsDeleteModalOpen(true);
+    };
+
+	const handleBatchDeleteClick = () => {
+		const selected = users.filter((_user, index) => checked.includes(index));
+		setSelectedUsers(selected);
+		setIsDeleteModalOpen(true);
+	};
+
+	const handleConfirmDelete = async () => {
+		for (const user of selectedUsers) {
+			deleteAction(user.email);
+		}
+		setIsDeleteModalOpen(false);
+		setChecked([]);
+	};
 
     const columns: GridColDef[] = [
         { field: 'firstName', headerName: 'First name', width: 150 },
@@ -64,6 +93,19 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
             ),
         },
         { field: 'role', headerName: 'Role', width: 150 },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 150,
+            renderCell: (params) => (
+                <IconButton
+                    color="error"
+                    onClick={() => handleDeleteClick(params.row as User)}
+                >
+                    <Delete />
+                </IconButton>
+            ),
+        },
     ];
 
     const rows = users.map((user, index) => ({ ...user, id: index }));
@@ -83,6 +125,18 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
                     >
                         New {role || 'user'}
                     </Button>
+                </Tooltip>
+                <Tooltip title="Delete selected users">
+                    <span>
+                        <Button
+                            color="error"
+                            startIcon={<Delete />}
+                            onClick={handleBatchDeleteClick}
+                            disabled={checked.length === 0}
+                        >
+                            Delete Selected
+                        </Button>
+                    </span>
                 </Tooltip>
             </GridToolbarContainer>
         );
@@ -141,6 +195,12 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
                                             </>
                                         }
                                     />
+                                    <IconButton
+                                        color="error"
+                                        onClick={() => handleDeleteClick(user)}
+                                    >
+                                        <Delete />
+                                    </IconButton>
                                 </ListItem>
                             );
                         })}
@@ -155,6 +215,23 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
                             <Add />
                         </Fab>
                     </Tooltip>
+                    <Tooltip title="Delete selected users">
+                        <span>
+                            <Fab
+                                color="error"
+                                aria-label="delete"
+                                onClick={handleBatchDeleteClick}
+                                sx={{
+                                    position: 'fixed',
+                                    bottom: 16,
+                                    right: 80,
+                                }}
+                                disabled={checked.length === 0}
+                            >
+                                <Delete />
+                            </Fab>
+                        </span>
+                    </Tooltip>
                 </>
             ) : (
                 <DataGrid
@@ -166,6 +243,21 @@ const UserTable: React.FC<UserTableProps> = ({ users, createAction, role }) => {
                     slots={{
                         toolbar: () => <CustomToolbar />,
                     }}
+                    onRowSelectionModelChange={(newSelection) => {
+                        setChecked(newSelection as number[]);
+                    }}
+                />
+            )}
+            {selectedUsers.length > 0 && (
+                <ConfirmDeleteModal
+                    open={isDeleteModalOpen}
+                    onClose={() => setIsDeleteModalOpen(false)}
+                    onConfirm={handleConfirmDelete}
+                    userName={
+                        selectedUsers.length === 1
+                            ? `${selectedUsers[0].firstName} ${selectedUsers[0].lastName}`
+                            : `${selectedUsers.length} users`
+                    }
                 />
             )}
         </>

@@ -6,6 +6,7 @@ import {
     Typography,
     CircularProgress,
     Alert,
+    Tooltip,
 } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
 import { createUser } from '../utils/firestore';
@@ -16,9 +17,16 @@ interface NewUserModalProps {
     open: boolean;
     onClose: () => void;
     role: string;
+    onUserCreated: (user: User) => void; // Add this line
 }
 
-const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role }) => {
+const NewUserModal: React.FC<NewUserModalProps> = ({
+    open,
+    onClose,
+    role,
+    onUserCreated,
+}) => {
+    // Update this line
     const notifications = useNotifications(); // Hook for notifications
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -45,6 +53,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role }) => {
                     autoHideDuration: 3000,
                 }
             );
+            onUserCreated(user); // Call the callback function
             onClose();
         } catch (error: any) {
             setError(`Error creating ${role} member: ${error.message}`);
@@ -91,16 +100,22 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    sx={{ mt: 2 }}
-                    disabled={loading || !isFormValid} // Disable button when loading or form is invalid
-                    startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
-                >
-                    {loading ? 'Creating...' : 'Create'}
-                </Button>
+                <Tooltip title="Create new user" arrow>
+                    <span>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            sx={{ mt: 2 }}
+                            disabled={loading || !isFormValid} // Disable button when loading or form is invalid
+                            startIcon={
+                                loading && <CircularProgress size={20} />
+                            } // Show loading indicator
+                        >
+                            {loading ? 'Creating...' : 'Create'}
+                        </Button>
+                    </span>
+                </Tooltip>
             </form>
         </ReusableModal>
     );

@@ -1,8 +1,9 @@
+// src/pages/staff.tsx
 import { useEffect, useState } from 'react';
 import { Typography, Button, Box, CircularProgress } from '@mui/material';
 import User from '../models/User';
 import { PageContainer } from '@toolpad/core';
-import { getUsersByRole } from '../utils/firestore';
+import { getUsersByRole, deleteUser } from '../utils/firestore';
 import UserTable from '../components/UserTable';
 import NewUserModal from '../components/NewUserModal';
 import { Add } from '@mui/icons-material';
@@ -29,6 +30,21 @@ export default function StaffPage() {
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
 
+    const handleDeleteUser = async (email: string) => {
+        try {
+            await deleteUser(email);
+            setStaffUsers((prevUsers) =>
+                prevUsers.filter((user) => user.email !== email)
+            );
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
+    const handleUserCreated = (user: User) => {
+        setStaffUsers((prevUsers) => [...prevUsers, user]);
+    };
+
     return (
         <PageContainer title="Staff Members" maxWidth={false}>
             {loading ? (
@@ -47,6 +63,7 @@ export default function StaffPage() {
                             role="staff"
                             users={staffUsers}
                             createAction={handleOpenModal}
+                            deleteAction={handleDeleteUser}
                         />
                     ) : (
                         <NoStaffPage createNewStaff={handleOpenModal} />
@@ -57,6 +74,7 @@ export default function StaffPage() {
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 role="staff"
+                onUserCreated={handleUserCreated} // Pass the callback
             />
         </PageContainer>
     );
