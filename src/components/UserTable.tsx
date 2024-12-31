@@ -10,17 +10,17 @@ import {
 } from '@mui/x-data-grid';
 import User from '../models/User';
 import {
-	Button,
-	Tooltip,
-	List,
-	ListItem,
-	ListItemText,
-	useMediaQuery,
-	useTheme,
-	Checkbox,
-	ListItemIcon,
-	Fab,
-	IconButton,
+    Button,
+    Tooltip,
+    List,
+    ListItem,
+    ListItemText,
+    useMediaQuery,
+    useTheme,
+    Checkbox,
+    ListItemIcon,
+    Fab,
+    IconButton,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
@@ -62,19 +62,21 @@ const UserTable: React.FC<UserTableProps> = ({
         setIsDeleteModalOpen(true);
     };
 
-	const handleBatchDeleteClick = () => {
-		const selected = users.filter((_user, index) => checked.includes(index));
-		setSelectedUsers(selected);
-		setIsDeleteModalOpen(true);
-	};
+    const handleBatchDeleteClick = () => {
+        const selected = users.filter((_user, index) =>
+            checked.includes(index)
+        );
+        setSelectedUsers(selected);
+        setIsDeleteModalOpen(true);
+    };
 
-	const handleConfirmDelete = async () => {
-		for (const user of selectedUsers) {
-			deleteAction(user.email);
-		}
-		setIsDeleteModalOpen(false);
-		setChecked([]);
-	};
+    const handleConfirmDelete = async () => {
+        for (const user of selectedUsers) {
+            deleteAction(user.email);
+        }
+        setIsDeleteModalOpen(false);
+        setChecked([]);
+    };
 
     const columns: GridColDef[] = [
         { field: 'firstName', headerName: 'First name', width: 150 },
