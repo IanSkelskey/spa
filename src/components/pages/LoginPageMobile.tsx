@@ -99,7 +99,7 @@ const LoginPageMobile: React.FC<LoginPageMobileProps> = ({ login }) => {
                     height: '100vh',
                     width: '100vw',
                     overflow: 'hidden',
-                    padding: 2,
+                    padding: 4,
                 }}
             >
                 <img

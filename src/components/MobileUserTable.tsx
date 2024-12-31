@@ -9,11 +9,12 @@ import {
     IconButton,
     Tooltip,
     Fab,
+    Button,
 } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import { Add, Delete, Info } from '@mui/icons-material';
 import User from '../models/User';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
-import DOMPurify from 'dompurify';
+import { Link } from 'react-router-dom';
 
 interface MobileUserTableProps {
     users: User[];
@@ -95,15 +96,6 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                 }
                                 secondary={
                                     <>
-                                        <a
-                                            href={`mailto:${DOMPurify.sanitize(user.email)}`}
-                                            style={{
-                                                textDecoration: 'none',
-                                                color: 'inherit',
-                                            }}
-                                        >
-                                            {DOMPurify.sanitize(user.email)}
-                                        </a>
                                         <span
                                             style={{
                                                 display: 'block',
@@ -115,6 +107,13 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                     </>
                                 }
                             />
+                            <Link to={`/clients/${user.email}`}>
+                                <Tooltip title="View Details">
+                                    <IconButton color="primary">
+                                        <Info />
+                                    </IconButton>
+                                </Tooltip>
+                            </Link>
                             <IconButton
                                 color="error"
                                 onClick={() => handleDeleteClick(user)}
