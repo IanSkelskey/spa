@@ -9,7 +9,6 @@ import {
     IconButton,
     Tooltip,
     Fab,
-    Button,
 } from '@mui/material';
 import { Add, Delete, Info } from '@mui/icons-material';
 import User from '../models/User';
