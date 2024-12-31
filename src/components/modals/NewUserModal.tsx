@@ -53,7 +53,11 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
             onClose();
         } catch (error) {
             console.error('Error creating user:', error); // Log the error for debugging
-            setError('Failed to create user: ' + error.message);
+            if (error instanceof Error) {
+                setError('Failed to create user: ' + error.message);
+            } else {
+                setError('Failed to create user: An unknown error occurred');
+            }
         } finally {
             setLoading(false);
         }
