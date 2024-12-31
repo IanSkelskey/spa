@@ -12,6 +12,8 @@ import { useNotifications } from '@toolpad/core';
 import { createUser } from '../utils/firestore';
 import User from '../models/User';
 import ReusableModal from './ReusableModal';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { useAuth } from '../utils/useAuth';
 
 interface NewUserModalProps {
     open: boolean;
@@ -33,6 +35,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false); // Loading state
     const [error, setError] = useState(''); // Error state
+    const { resetPassword } = useAuth(); // Get the resetPassword method from the useAuth hook
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); // Prevent default form submission
@@ -46,6 +49,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
         try {
             const user: User = { firstName, lastName, email, role };
             await createUser(user); // Create user in Firestore
+            await resetPassword(user.email); // Send password reset email
             notifications.show(
                 `${role.charAt(0).toUpperCase() + role.slice(1)} member created successfully`,
                 {
