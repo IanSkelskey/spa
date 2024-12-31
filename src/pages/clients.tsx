@@ -1,102 +1,48 @@
-// src/pages/clients.tsx
 import { useEffect, useState } from 'react';
-import { Typography, Button, Box, CircularProgress } from '@mui/material';
+import UserManagementPage from '../components/pages/UserManagementPage';
+import { getUsersByRole, deleteUser, createUser } from '../utils/firestore';
 import User from '../models/User';
-import { PageContainer } from '@toolpad/core';
-import { getUsersByRole, deleteUser } from '../utils/firestore';
-import UserTable from '../components/UserTable';
-import NewUserModal from '../components/NewUserModal';
-import { Add } from '@mui/icons-material';
+import { CircularProgress, Box } from '@mui/material';
 
 export default function ClientsPage() {
-    const [clientUsers, setClientUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
-        const fetchClientUsers = async () => {
+        const fetchUsers = async () => {
             try {
                 const users = await getUsersByRole('client');
-                setClientUsers(users);
+                setUsers(users);
             } catch (error) {
                 console.error('Error fetching client users:', error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchClientUsers();
+        fetchUsers();
     }, []);
 
-    const handleOpenModal = () => setIsModalOpen(true);
-    const handleCloseModal = () => setIsModalOpen(false);
-
-    const handleDeleteUser = async (email: string) => {
-        try {
-            await deleteUser(email);
-            setClientUsers((prevUsers) =>
-                prevUsers.filter((user) => user.email !== email)
-            );
-        } catch (error) {
-            console.error('Error deleting user:', error);
-        }
-    };
-
-    const handleUserCreated = (user: User) => {
-        setClientUsers((prevUsers) => [...prevUsers, user]);
-    };
-
-    return (
-        <PageContainer title="Clients" maxWidth={false}>
-            {loading ? (
-                <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    height="100%"
-                >
-                    <CircularProgress />
-                </Box>
-            ) : (
-                <>
-                    {clientUsers.length > 0 ? (
-                        <UserTable
-                            users={clientUsers}
-                            createAction={handleOpenModal}
-                            deleteAction={handleDeleteUser}
-                        />
-                    ) : (
-                        <NoClientsPage createNewClient={handleOpenModal} />
-                    )}
-                </>
-            )}
-            <NewUserModal
-                open={isModalOpen}
-                onClose={handleCloseModal}
-                role="client"
-                onUserCreated={handleUserCreated} // Pass the callback
-            />
-        </PageContainer>
-    );
-}
-
-function NoClientsPage({ createNewClient }: { createNewClient: () => void }) {
-    return (
-        <Box>
-            <Typography variant="h6" gutterBottom>
-                No clients available.
-            </Typography>
-            <Typography variant="body1" color="textSecondary" paragraph>
-                You can add new clients by clicking the button below.
-            </Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={createNewClient}
-                sx={{ mt: 2 }}
-                startIcon={<Add />}
+    if (loading) {
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height="100%"
             >
-                Create New Client
-            </Button>
-        </Box>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
+    return (
+        <UserManagementPage
+            role="client"
+            title="Clients"
+            noUsersMessage="No clients available."
+            users={users}
+            deleteUser={deleteUser}
+            createUser={createUser}
+        />
     );
 }

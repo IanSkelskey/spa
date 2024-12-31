@@ -8,6 +8,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import User from '../models/User';
+import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 
 export async function getUserByEmail(email: string): Promise<User> {
     try {
@@ -50,7 +51,7 @@ export async function getUsersByRole(role: string): Promise<User[]> {
     }
 }
 
-export async function createUser(user: User) {
+export async function createUser(user: User): Promise<User> {
     const response = await fetch(
         `https://us-central1-the-spa-84a52.cloudfunctions.net/createUser`,
         {
@@ -66,7 +67,12 @@ export async function createUser(user: User) {
         throw new Error('Network response was not ok');
     }
 
-    return response; // Return response for further processing
+    // Send password reset email after user creation
+    const auth = getAuth();
+    await sendPasswordResetEmail(auth, user.email);
+
+    const createdUser = await response.json();
+    return createdUser as User; // Return created user for further processing
 }
 
 export async function deleteUser(email: string) {
