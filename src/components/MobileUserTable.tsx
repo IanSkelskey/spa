@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
 import User from '../models/User';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
+import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 
 interface MobileUserTableProps {
     users: User[];

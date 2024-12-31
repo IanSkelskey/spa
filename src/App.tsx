@@ -45,10 +45,6 @@ function App() {
                     icon: <Person />,
                 },
                 {
-                    kind: 'header',
-                    title: 'Main Items',
-                },
-                {
                     segment: 'dashboard',
                     title: 'Dashboard',
                     icon: <Dashboard />,

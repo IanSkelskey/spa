@@ -6,9 +6,9 @@ import {
     Alert,
 } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
-import User from '../models/User';
+import User from '../../models/User';
 import ReusableModal from './ReusableModal';
-import validateEmail from '../utils/validateEmail';
+import validateEmail from '../../utils/validateEmail';
 
 interface NewUserModalProps {
     open: boolean;

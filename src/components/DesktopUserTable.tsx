@@ -12,7 +12,7 @@ import {
 import User from '../models/User';
 import { Button, Tooltip, IconButton } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
+import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 import { Link } from 'react-router-dom';
 
 interface DesktopUserTableProps {
