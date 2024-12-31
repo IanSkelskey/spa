@@ -1,3 +1,4 @@
+// src/pages/clients.tsx
 import { useEffect, useState } from 'react';
 import { Typography, Button, Box, CircularProgress } from '@mui/material';
 import User from '../models/User';
@@ -40,6 +41,10 @@ export default function ClientsPage() {
         }
     };
 
+    const handleUserCreated = (user: User) => {
+        setClientUsers((prevUsers) => [...prevUsers, user]);
+    };
+
     return (
         <PageContainer title="Clients" maxWidth={false}>
             {loading ? (
@@ -68,6 +73,7 @@ export default function ClientsPage() {
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 role="client"
+                onUserCreated={handleUserCreated} // Pass the callback
             />
         </PageContainer>
     );

@@ -17,9 +17,10 @@ interface NewUserModalProps {
     open: boolean;
     onClose: () => void;
     role: string;
+    onUserCreated: (user: User) => void; // Add this line
 }
 
-const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role }) => {
+const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role, onUserCreated }) => { // Update this line
     const notifications = useNotifications(); // Hook for notifications
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -46,6 +47,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role }) => {
                     autoHideDuration: 3000,
                 }
             );
+            onUserCreated(user); // Call the callback function
             onClose();
         } catch (error: any) {
             setError(`Error creating ${role} member: ${error.message}`);

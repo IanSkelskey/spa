@@ -1,3 +1,4 @@
+// src/pages/staff.tsx
 import { useEffect, useState } from 'react';
 import { Typography, Button, Box, CircularProgress } from '@mui/material';
 import User from '../models/User';
@@ -40,6 +41,10 @@ export default function StaffPage() {
         }
     };
 
+    const handleUserCreated = (user: User) => {
+        setStaffUsers((prevUsers) => [...prevUsers, user]);
+    };
+
     return (
         <PageContainer title="Staff Members" maxWidth={false}>
             {loading ? (
@@ -69,6 +74,7 @@ export default function StaffPage() {
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 role="staff"
+                onUserCreated={handleUserCreated} // Pass the callback
             />
         </PageContainer>
     );
