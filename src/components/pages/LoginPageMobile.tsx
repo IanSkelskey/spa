@@ -97,7 +97,9 @@ const LoginPageMobile: React.FC<LoginPageMobileProps> = ({ login }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: '100vh',
-                    margin: 2,
+                    width: '100vw',
+                    overflow: 'hidden',
+                    padding: 2,
                 }}
             >
                 <img
