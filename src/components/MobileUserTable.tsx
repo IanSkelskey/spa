@@ -13,6 +13,7 @@ import {
 import { Add, Delete } from '@mui/icons-material';
 import User from '../models/User';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
+import DOMPurify from 'dompurify';
 
 interface MobileUserTableProps {
     users: User[];
@@ -95,13 +96,13 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                 secondary={
                                     <>
                                         <a
-                                            href={`mailto:${user.email}`}
+                                            href={`mailto:${DOMPurify.sanitize(user.email)}`}
                                             style={{
                                                 textDecoration: 'none',
                                                 color: 'inherit',
                                             }}
                                         >
-                                            {user.email}
+                                            {DOMPurify.sanitize(user.email)}
                                         </a>
                                         <span
                                             style={{
