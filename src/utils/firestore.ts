@@ -71,8 +71,7 @@ export async function createUser(user: User): Promise<User> {
     const auth = getAuth();
     await sendPasswordResetEmail(auth, user.email);
 
-    const createdUser = await response.json();
-    return createdUser as User; // Return created user for further processing
+    return user; // Return user for further processing
 }
 
 export async function deleteUser(email: string) {

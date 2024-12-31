@@ -27,7 +27,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
                 severity: 'success',
                 autoHideDuration: 3000,
             });
-            onClose();
+            onClose(); // Close the modal only after the delete operation is successful
         } catch (error) {
             notifications.show('Failed to delete user', {
                 severity: 'error',
