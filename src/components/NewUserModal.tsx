@@ -1,25 +1,21 @@
-// src/components/NewUserModal.tsx
 import React, { useState } from 'react';
 import {
     TextField,
     Button,
-    Typography,
     CircularProgress,
     Alert,
-    Tooltip,
 } from '@mui/material';
 import { useNotifications } from '@toolpad/core';
-import { createUser } from '../utils/firestore';
 import User from '../models/User';
 import ReusableModal from './ReusableModal';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { useAuth } from '../utils/useAuth';
+import validateEmail from '../utils/validateEmail';
 
 interface NewUserModalProps {
     open: boolean;
     onClose: () => void;
     role: string;
-    onUserCreated: (user: User) => void; // Add this line
+    onUserCreated: (user: User) => void;
+    createUser: (user: User) => Promise<User>;
 }
 
 const NewUserModal: React.FC<NewUserModalProps> = ({
@@ -27,29 +23,27 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
     onClose,
     role,
     onUserCreated,
+    createUser,
 }) => {
-    // Update this line
-    const notifications = useNotifications(); // Hook for notifications
+    const notifications = useNotifications();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
-    const [error, setError] = useState(''); // Error state
-    const { resetPassword } = useAuth(); // Get the resetPassword method from the useAuth hook
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
         if (!validateEmail(email)) {
             setError('Invalid email address');
             return;
         }
-        setLoading(true); // Set loading to true when the submit starts
-        setError(''); // Clear any previous errors
+        setLoading(true);
+        setError('');
 
         try {
             const user: User = { firstName, lastName, email, role };
-            await createUser(user); // Create user in Firestore
-            await resetPassword(user.email); // Send password reset email
+            await createUser(user);
             notifications.show(
                 `${role.charAt(0).toUpperCase() + role.slice(1)} member created successfully`,
                 {
@@ -57,77 +51,66 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
                     autoHideDuration: 3000,
                 }
             );
-            onUserCreated(user); // Call the callback function
+            onUserCreated(user);
             onClose();
-        } catch (error: any) {
-            setError(`Error creating ${role} member: ${error.message}`);
+        } catch (error) {
+            setError('Failed to create user');
         } finally {
-            setLoading(false); // Set loading to false when the submit ends
+            setLoading(false);
         }
     };
 
-    const isFormValid = firstName && lastName && email; // Check if form is valid
-
     return (
-        <ReusableModal
-            open={open}
-            onClose={onClose}
-            title={`Create New ${role.charAt(0).toUpperCase() + role.slice(1)}`}
-        >
-            <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-                Enter the details of the new {role} member
-            </Typography>
-            {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                </Alert>
-            )}
+        <ReusableModal open={open} onClose={onClose} title={`Create New ${role}`}>
             <form onSubmit={handleSubmit}>
+                {error && <Alert severity="error">{error}</Alert>}
                 <TextField
                     label="First Name"
-                    fullWidth
-                    margin="normal"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    fullWidth
+                    margin="normal"
                 />
                 <TextField
                     label="Last Name"
-                    fullWidth
-                    margin="normal"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    fullWidth
+                    margin="normal"
                 />
                 <TextField
                     label="Email"
-                    fullWidth
-                    margin="normal"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    fullWidth
+                    margin="normal"
                 />
-                <Tooltip title="Create new user" arrow>
-                    <span>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            sx={{ mt: 2 }}
-                            disabled={loading || !isFormValid} // Disable button when loading or form is invalid
-                            startIcon={
-                                loading && <CircularProgress size={20} />
-                            } // Show loading indicator
-                        >
-                            {loading ? 'Creating...' : 'Create'}
-                        </Button>
-                    </span>
-                </Tooltip>
+                <div style={{ position: 'relative' }}>
+                    <Button
+                        type="submit"
+                        color="primary"
+                        variant="contained"
+                        disabled={loading}
+                        fullWidth
+                    >
+                        Create
+                    </Button>
+                    {loading && (
+                        <CircularProgress
+                            size={24}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                marginTop: -12,
+                                marginLeft: -12,
+                            }}
+                        />
+                    )}
+                </div>
             </form>
         </ReusableModal>
     );
 };
 
 export default NewUserModal;
-
-function validateEmail(email: string) {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}

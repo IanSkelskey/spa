@@ -33,7 +33,7 @@ function App() {
 
     const NAVIGATION: Navigation = React.useMemo(() => {
         if (role === 'owner' || role === 'staff') {
-            return [
+            const navigationItems = [
                 {
                     segment: '',
                     title: 'Home',
@@ -58,12 +58,17 @@ function App() {
                     title: 'Clients',
                     icon: <People />,
                 },
-                {
+            ];
+
+            if (role === 'owner') {
+                navigationItems.push({
                     segment: 'staff',
                     title: 'Staff',
                     icon: <Badge />,
-                },
-            ];
+                });
+            }
+
+            return navigationItems;
         } else if (role === 'client') {
             return [
                 {

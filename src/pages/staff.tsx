@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Typography, Button, Box, CircularProgress } from '@mui/material';
 import User from '../models/User';
 import { PageContainer } from '@toolpad/core';
-import { getUsersByRole, deleteUser } from '../utils/firestore';
+import { getUsersByRole, deleteUser, createUser } from '../utils/firestore';
 import UserTable from '../components/UserTable';
 import NewUserModal from '../components/NewUserModal';
 import { Add } from '@mui/icons-material';
@@ -75,6 +75,7 @@ export default function StaffPage() {
                 onClose={handleCloseModal}
                 role="staff"
                 onUserCreated={handleUserCreated} // Pass the callback
+                createUser={createUser}
             />
         </PageContainer>
     );
