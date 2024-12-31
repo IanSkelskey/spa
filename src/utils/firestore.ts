@@ -70,20 +70,20 @@ export async function createUser(user: User) {
 }
 
 export async function deleteUser(email: string) {
-	const response = await fetch(
-		`https://us-central1-the-spa-84a52.cloudfunctions.net/deleteUser`,
-		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ email }),
-		}
-	);
+    const response = await fetch(
+        `https://us-central1-the-spa-84a52.cloudfunctions.net/deleteUser`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        }
+    );
 
-	if (!response.ok) {
-		throw new Error('Network response was not ok');
-	}
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
 
-	return response; // Return response for further processing
+    return response; // Return response for further processing
 }

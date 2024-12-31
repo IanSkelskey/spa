@@ -20,7 +20,13 @@ interface NewUserModalProps {
     onUserCreated: (user: User) => void; // Add this line
 }
 
-const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role, onUserCreated }) => { // Update this line
+const NewUserModal: React.FC<NewUserModalProps> = ({
+    open,
+    onClose,
+    role,
+    onUserCreated,
+}) => {
+    // Update this line
     const notifications = useNotifications(); // Hook for notifications
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -102,7 +108,9 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ open, onClose, role, onUser
                             type="submit"
                             sx={{ mt: 2 }}
                             disabled={loading || !isFormValid} // Disable button when loading or form is invalid
-                            startIcon={loading && <CircularProgress size={20} />} // Show loading indicator
+                            startIcon={
+                                loading && <CircularProgress size={20} />
+                            } // Show loading indicator
                         >
                             {loading ? 'Creating...' : 'Create'}
                         </Button>
