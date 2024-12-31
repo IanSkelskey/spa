@@ -44,18 +44,7 @@ const LoginPage = () => {
     if (isMobile) {
         return (
             <LoginPageMobile
-                email={email}
-                setEmail={setEmail}
-                password={password}
-                setPassword={setPassword}
-                rememberMe={rememberMe}
-                setRememberMe={setRememberMe}
-                showPassword={showPassword}
-                setShowPassword={setShowPassword}
-                loading={loading}
-                error={error}
-                setError={setError}
-                handleSubmit={handleSubmit}
+                login={login}
             />
         );
     }

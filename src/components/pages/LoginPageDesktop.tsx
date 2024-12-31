@@ -37,7 +37,7 @@ const LoginPageDesktop: React.FC<LoginPageDesktopProps> = ({
     const [isForgotPasswordModalOpen, setForgotPasswordModalOpen] =
         useState(false);
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleClickShowPassword = () => setShowPassword(!showPassword);
 
     function RememberMe() {
         return (

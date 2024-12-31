@@ -25,7 +25,7 @@ const AppWithAuth = () => {
 
     // If no user is provided, always render the login page
     if (!user) {
-        return <LoginPage login={login} />;
+        return <LoginPage />;
     }
 
     return (
@@ -148,7 +148,7 @@ const router = createBrowserRouter([
                 path: '/login',
                 Component: () => {
                     const { login } = useAuth();
-                    return <LoginPage login={login} />;
+                    return <LoginPage />;
                 }, // Ensure the login page is accessible directly via /login
             },
         ],
