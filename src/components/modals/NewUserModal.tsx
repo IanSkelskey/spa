@@ -38,7 +38,10 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
 
         try {
             const user: User = { firstName, lastName, email, role };
-            await createUser(user);
+            const createdUser = await createUser(user);
+            if (!createdUser) {
+                throw new Error('Failed to create user');
+            }
             notifications.show(
                 `${role.charAt(0).toUpperCase() + role.slice(1)} member created successfully`,
                 {
@@ -46,10 +49,15 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
                     autoHideDuration: 3000,
                 }
             );
-            onUserCreated(user);
+            onUserCreated(createdUser);
             onClose();
         } catch (error) {
-            setError('Failed to create user');
+            console.error('Error creating user:', error); // Log the error for debugging
+            if (error instanceof Error) {
+                setError('Failed to create user: ' + error.message);
+            } else {
+                setError('Failed to create user: An unknown error occurred');
+            }
         } finally {
             setLoading(false);
         }
@@ -84,7 +92,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({
                     fullWidth
                     margin="normal"
                 />
-                <div style={{ position: 'relative' }}>
+                <div style={{ position: 'relative', marginTop: '16px' }}>
                     <Button
                         type="submit"
                         color="primary"

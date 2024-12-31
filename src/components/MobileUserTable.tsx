@@ -60,7 +60,7 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
 
     const handleConfirmDelete = async () => {
         for (const user of selectedUsers) {
-            deleteAction(user.email);
+            await deleteAction(user.email); // Await the delete action
         }
         setIsDeleteModalOpen(false);
         setChecked([]);
