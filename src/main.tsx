@@ -21,7 +21,7 @@ const ClientDetailsPage = React.lazy(() => import('./pages/clientDetails'));
 export const LogoutContext = React.createContext<() => void>(() => {});
 
 const AppWithAuth = () => {
-    const { user, login, logout } = useAuth();
+    const { user, logout } = useAuth();
 
     // If no user is provided, always render the login page
     if (!user) {
@@ -147,7 +147,6 @@ const router = createBrowserRouter([
             {
                 path: '/login',
                 Component: () => {
-                    const { login } = useAuth();
                     return <LoginPage />;
                 }, // Ensure the login page is accessible directly via /login
             },
