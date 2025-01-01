@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { AppProvider } from '@toolpad/core/react-router-dom';
-import type { Navigation } from '@toolpad/core';
 import { useMediaQuery } from '@mui/material';
 import { lightTheme, darkTheme } from './utils/theme';
 import { useAuth } from './utils/useAuth';
@@ -9,6 +8,7 @@ import { Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { Badge, Dashboard, Home, People, Person } from '@mui/icons-material';
 import { getUserRole } from './utils/firestore';
+import { NavigationItem } from '@toolpad/core';
 
 function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -16,22 +16,21 @@ function App() {
     const [role, setRole] = React.useState<string | null>(null);
 
     React.useEffect(() => {
-        const fetchUserRole = async () => {
-            if (user && user.email) {
-                try {
-                    const role = await getUserRole(user.email);
-                    setRole(role);
-                } catch (error) {
-                    console.error('Error fetching user role:', error);
-                    setRole(null); // Handle error
-                }
-            }
-        };
-
         fetchUserRole();
     }, [user]);
+    const fetchUserRole = async () => {
+        if (user && user.email) {
+            try {
+                const role = await getUserRole(user.email);
+                setRole(role);
+            } catch (error) {
+                console.error('Error fetching user role:', error);
+                setRole(null); // Handle error
+            }
+        }
+    };
 
-    const NAVIGATION: Navigation = React.useMemo(() => {
+    const NAVIGATION: NavigationItem[] = React.useMemo(() => {
         if (role === 'owner' || role === 'staff') {
             const navigationItems = [
                 {
@@ -53,6 +52,7 @@ function App() {
                     segment: 'clients',
                     title: 'Clients',
                     icon: <People />,
+                    pattern: 'clients{/:email}*',
                 },
             ];
 

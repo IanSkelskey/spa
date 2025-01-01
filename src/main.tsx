@@ -110,19 +110,19 @@ const router = createBrowserRouter([
                                     <ProtectedRoute
                                         allowedRoles={['staff', 'owner']}
                                     >
-                                        <ClientsPage />
+                                        <Outlet />
                                     </ProtectedRoute>
                                 ),
-                            },
-                            {
-                                path: 'clients/:email',
-                                element: (
-                                    <ProtectedRoute
-                                        allowedRoles={['staff', 'owner']}
-                                    >
-                                        <ClientDetailsPage />
-                                    </ProtectedRoute>
-                                ),
+                                children: [
+                                    {
+                                        path: '',
+                                        Component: ClientsPage,
+                                    },
+                                    {
+                                        path: ':email',
+                                        Component: ClientDetailsPage,
+                                    },
+                                ],
                             },
                             {
                                 path: 'profile',
@@ -146,9 +146,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/login',
-                Component: () => {
-                    return <LoginPage />;
-                }, // Ensure the login page is accessible directly via /login
+                Component: LoginPage, // Ensure the login page is accessible directly via /login
             },
         ],
     },
