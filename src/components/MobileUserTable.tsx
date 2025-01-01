@@ -91,7 +91,6 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
             <List>
                 {users.map((user, index) => {
                     const labelId = `checkbox-list-label-${index}`;
-                    const profilePicPath = `users/${user.email}/profile.jpg`;
 
                     return (
                         <ListItem key={index} divider>
