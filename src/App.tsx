@@ -30,7 +30,7 @@ function App() {
         }
     };
 
-    const NAVIGATION: NavigationItem[] = React.useMemo(() => {
+    const NAVIGATION: Navigation = React.useMemo(() => {
         if (role === 'owner' || role === 'staff') {
             const navigationItems = [
                 {
@@ -52,7 +52,7 @@ function App() {
                     segment: 'clients',
                     title: 'Clients',
                     icon: <People />,
-                    pattern: 'clients{/:email}*',
+                    pattern: 'clients/:email',
                 },
             ];
 
@@ -61,7 +61,7 @@ function App() {
                     segment: 'staff',
                     title: 'Staff',
                     icon: <Badge />,
-                    pattern: 'staff{/:email}*',
+                    pattern: 'staff/:email',
                 });
             }
 
