@@ -15,8 +15,18 @@ const LoginPage = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const handleLogin = async (email: string, password: string) => {
+        const result = await login(email, password);
+        if (result.user && rememberMe) {
+            localStorage.setItem('rememberedEmail', email);
+        } else {
+            localStorage.removeItem('rememberedEmail');
+        }
+        return result;
+    };
+
     if (isMobile) {
-        return <LoginPageMobile login={login} />;
+        return <LoginPageMobile login={handleLogin} />;
     }
 
     return (
@@ -24,7 +34,7 @@ const LoginPage = () => {
             signIn={async (_provider, formData) => {
                 const email = formData.get('email') as string;
                 const password = formData.get('password') as string;
-                return login(email, password);
+                return handleLogin(email, password);
             }}
             providers={[{ id: 'credentials', name: 'Email and Password' }]}
             rememberMe={rememberMe}
