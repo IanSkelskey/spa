@@ -27,13 +27,14 @@ function ToolbarActionsAccount({ logout }: { logout: () => void }) {
     };
 
     return (
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" overflow="hidden">
             {user && (
                 <>
-                    <Tooltip title="Open profile menu">
+                    <Tooltip title="Open profile menu" disableInteractive>
                         <IconButton
                             color="primary"
                             onClick={handleMenuOpen}
+                            sx={{ p: 0 }}
                         >
                             <Avatar
                                 src={profilePicture || ''}
@@ -46,13 +47,15 @@ function ToolbarActionsAccount({ logout }: { logout: () => void }) {
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={handleMenuClose}
+                        PaperProps={{
+                            style: {
+                                maxHeight: '40vh',
+                                overflow: 'auto',
+                            },
+                        }}
                     >
-                        <Tooltip title="Go to profile">
-                            <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-                        </Tooltip>
-                        <Tooltip title="Log out">
-                            <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-                        </Tooltip>
+                        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
                     </Menu>
                 </>
             )}

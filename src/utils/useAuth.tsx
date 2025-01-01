@@ -19,10 +19,19 @@ export function useAuth() {
         const cachedUser = localStorage.getItem('user');
         return cachedUser ? JSON.parse(cachedUser) : null;
     });
-    const [profilePicture, setProfilePicture] = useState<string | null>(() => {
+    const [profilePicture, setProfilePictureState] = useState<string | null>(() => {
         return localStorage.getItem('profilePicture');
     });
     const notifications = useNotifications();
+
+    const setProfilePicture = (url: string | null) => {
+        setProfilePictureState(url);
+        if (url) {
+            localStorage.setItem('profilePicture', url);
+        } else {
+            localStorage.removeItem('profilePicture');
+        }
+    };
 
     const logout = () => {
         auth.signOut()
@@ -62,7 +71,6 @@ export function useAuth() {
             const profilePicPath = `users/${loggedInUser.email}/profile.jpg`;
             const profilePicUrl = await getImageUrl(profilePicPath);
             setProfilePicture(profilePicUrl);
-            localStorage.setItem('profilePicture', profilePicUrl);
 
             notifications.show('Welcome back!', {
                 severity: 'success',
@@ -109,7 +117,6 @@ export function useAuth() {
                     const profilePicPath = `users/${user.email}/profile.jpg`;
                     const profilePicUrl = await getImageUrl(profilePicPath);
                     setProfilePicture(profilePicUrl);
-                    localStorage.setItem('profilePicture', profilePicUrl);
                 } catch (error) {
                     console.error('Error fetching user:', error);
                     setUser(null);
@@ -128,5 +135,5 @@ export function useAuth() {
         return () => unsubscribe();
     }, []);
 
-    return { user, profilePicture, login, logout, resetPassword };
+    return { user, profilePicture, setProfilePicture, login, logout, resetPassword };
 }

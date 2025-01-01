@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
-import { PageContainer } from '@toolpad/core';
+import { PageContainer, useNotifications } from '@toolpad/core';
 import { Box, Avatar, CircularProgress, IconButton, Fab } from '@mui/material';
 import User from '../models/User';
 import { useAuth } from '../utils/useAuth';
@@ -12,6 +12,7 @@ import { uploadImage, getImageUrl } from '../utils/storage';
 
 const ProfilePage = () => {
     const { user, profilePicture, setProfilePicture } = useAuth();
+    const notifications = useNotifications();
     const [currentUser, setCurrentUser] = useState<User | null>(user);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [isImageViewModalOpen, setIsImageViewModalOpen] = useState(false);
@@ -29,11 +30,16 @@ const ProfilePage = () => {
                 await uploadImage(file, path);
                 const url = await getImageUrl(path);
                 setProfilePicture(url);
-                localStorage.setItem('profilePicture', url);
-                alert('Profile picture uploaded successfully!');
+                notifications.show('Profile picture uploaded successfully!', {
+                    severity: 'success',
+                    autoHideDuration: 3000,
+                });
             } catch (error) {
                 console.error('Error uploading profile picture:', error);
-                alert('Failed to upload profile picture.');
+                notifications.show('Failed to upload profile picture.', {
+                    severity: 'error',
+                    autoHideDuration: 3000,
+                });
             } finally {
                 setLoading(false);
             }
