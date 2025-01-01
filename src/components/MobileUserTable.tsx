@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     List,
     ListItem,
@@ -14,6 +14,7 @@ import { Add, Delete, Info } from '@mui/icons-material';
 import User from '../models/User';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../utils/storage';
 
 interface MobileUserTableProps {
     users: User[];
@@ -31,6 +32,25 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
     const [checked, setChecked] = useState<number[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [profilePictures, setProfilePictures] = useState<{ [email: string]: string | null }>({});
+
+    useEffect(() => {
+        const fetchProfilePictures = async () => {
+            const pictures: { [email: string]: string | null } = {};
+            for (const user of users) {
+                try {
+                    const profilePicPath = `users/${user.email}/profile.jpg`;
+                    const profilePicUrl = await getImageUrl(profilePicPath);
+                    pictures[user.email] = profilePicUrl;
+                } catch (error) {
+                    console.error('Error fetching profile picture:', error);
+                    pictures[user.email] = null;
+                }
+            }
+            setProfilePictures(pictures);
+        };
+        fetchProfilePictures();
+    }, [users]);
 
     const handleToggle = (value: number) => () => {
         const currentIndex = checked.indexOf(value);
@@ -89,7 +109,7 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                             </ListItemIcon>
                             <ListItemIcon>
                                 <Avatar
-                                    src={profilePicPath}
+                                    src={profilePictures[user.email] || ''}
                                     alt={`${user.firstName} ${user.lastName}`}
                                 />
                             </ListItemIcon>
