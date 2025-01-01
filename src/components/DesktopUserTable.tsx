@@ -12,6 +12,7 @@ import User from '../models/User';
 import { Button, Tooltip, IconButton, Avatar } from '@mui/material';
 import { Add, Delete, Info } from '@mui/icons-material';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
+import ImageViewModal from './modals/ImageViewModal';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/storage';
 
@@ -34,6 +35,8 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
     const [profilePictures, setProfilePictures] = useState<{
         [email: string]: string | null;
     }>({});
+    const [isImageViewModalOpen, setIsImageViewModalOpen] = useState(false);
+    const [imageViewUrl, setImageViewUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProfilePictures = async () => {
@@ -74,6 +77,13 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
         setChecked([]);
     };
 
+    const handleProfilePictureClick = (url: string | null) => {
+        if (url) {
+            setImageViewUrl(url);
+            setIsImageViewModalOpen(true);
+        }
+    };
+
     const columns: GridColDef[] = [
         {
             field: 'profilePicture',
@@ -85,7 +95,9 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                         display: 'flex',
                         alignItems: 'center',
                         height: '100%',
+                        cursor: 'pointer',
                     }}
+                    onClick={() => handleProfilePictureClick(profilePictures[params.row.email])}
                 >
                     <Avatar
                         src={profilePictures[params.row.email] || ''}
@@ -190,6 +202,14 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                             ? `${selectedUsers[0].firstName} ${selectedUsers[0].lastName}`
                             : `${selectedUsers.length} users`
                     }
+                />
+            )}
+            {imageViewUrl && (
+                <ImageViewModal
+                    open={isImageViewModalOpen}
+                    onClose={() => setIsImageViewModalOpen(false)}
+                    imageUrl={imageViewUrl}
+                    title="Profile Picture"
                 />
             )}
         </>

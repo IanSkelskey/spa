@@ -13,6 +13,7 @@ import {
 import { Add, Delete, Info } from '@mui/icons-material';
 import User from '../models/User';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
+import ImageViewModal from './modals/ImageViewModal';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/storage';
 
@@ -32,9 +33,9 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
     const [checked, setChecked] = useState<number[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [profilePictures, setProfilePictures] = useState<{
-        [email: string]: string | null;
-    }>({});
+    const [profilePictures, setProfilePictures] = useState<{ [email: string]: string | null }>({});
+    const [isImageViewModalOpen, setIsImageViewModalOpen] = useState(false);
+    const [imageViewUrl, setImageViewUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProfilePictures = async () => {
@@ -88,6 +89,13 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
         setChecked([]);
     };
 
+    const handleProfilePictureClick = (url: string | null) => {
+        if (url) {
+            setImageViewUrl(url);
+            setIsImageViewModalOpen(true);
+        }
+    };
+
     return (
         <>
             <List>
@@ -112,6 +120,8 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                 <Avatar
                                     src={profilePictures[user.email] || ''}
                                     alt={`${user.firstName} ${user.lastName}`}
+                                    sx={{ cursor: 'pointer' }}
+                                    onClick={() => handleProfilePictureClick(profilePictures[user.email])}
                                 />
                             </ListItemIcon>
                             <ListItemText
@@ -186,6 +196,14 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                             ? `${selectedUsers[0].firstName} ${selectedUsers[0].lastName}`
                             : `${selectedUsers.length} users`
                     }
+                />
+            )}
+            {imageViewUrl && (
+                <ImageViewModal
+                    open={isImageViewModalOpen}
+                    onClose={() => setIsImageViewModalOpen(false)}
+                    imageUrl={imageViewUrl}
+                    title="Profile Picture"
                 />
             )}
         </>
