@@ -17,6 +17,7 @@ const LoginPage = React.lazy(() => import('./pages/login'));
 const HomePage = React.lazy(() => import('./pages/home'));
 const NotFoundPage = React.lazy(() => import('./pages/404'));
 const ClientDetailsPage = React.lazy(() => import('./pages/clientDetails'));
+const StaffDetailsPage = React.lazy(() => import('./pages/staffDetails'));
 
 export const LogoutContext = React.createContext<() => void>(() => {});
 
@@ -110,31 +111,41 @@ const router = createBrowserRouter([
                                     <ProtectedRoute
                                         allowedRoles={['staff', 'owner']}
                                     >
-                                        <ClientsPage />
+                                        <Outlet />
                                     </ProtectedRoute>
                                 ),
-                            },
-                            {
-                                path: 'clients/:email',
-                                element: (
-                                    <ProtectedRoute
-                                        allowedRoles={['staff', 'owner']}
-                                    >
-                                        <ClientDetailsPage />
-                                    </ProtectedRoute>
-                                ),
-                            },
-                            {
-                                path: 'profile',
-                                Component: ProfilePage,
+                                children: [
+                                    {
+                                        path: '',
+                                        Component: ClientsPage,
+                                    },
+                                    {
+                                        path: ':email',
+                                        Component: ClientDetailsPage,
+                                    },
+                                ],
                             },
                             {
                                 path: 'staff',
                                 element: (
                                     <ProtectedRoute allowedRoles={['owner']}>
-                                        <StaffPage />
+                                        <Outlet />
                                     </ProtectedRoute>
                                 ),
+                                children: [
+                                    {
+                                        path: '',
+                                        Component: StaffPage,
+                                    },
+                                    {
+                                        path: ':email',
+                                        Component: StaffDetailsPage,
+                                    },
+                                ],
+                            },
+                            {
+                                path: 'profile',
+                                Component: ProfilePage,
                             },
                             {
                                 path: '*', // Catch-all for undefined routes
@@ -146,9 +157,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/login',
-                Component: () => {
-                    return <LoginPage />;
-                }, // Ensure the login page is accessible directly via /login
+                Component: LoginPage, // Ensure the login page is accessible directly via /login
             },
         ],
     },
