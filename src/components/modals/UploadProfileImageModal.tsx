@@ -48,7 +48,7 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
     };
 
     const onCropComplete = useCallback(
-        (croppedArea, croppedAreaPixels) => {
+        (_croppedArea: any, croppedAreaPixels: any) => {
             setCroppedAreaPixels(croppedAreaPixels);
         },
         [setCroppedAreaPixels]
@@ -112,14 +112,16 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
                 {preview && (
                     <Box mt={2} width="100%">
                         <Typography variant="body2">Zoom:</Typography>
-                        <Slider
-                            value={zoom}
-                            min={1}
-                            max={3}
-                            step={0.1}
-                            aria-labelledby="Zoom"
-                            onChange={(e, zoom) => setZoom(zoom as number)}
-                        />
+                        <Box px={2}>
+                            <Slider
+                                value={zoom}
+                                min={1}
+                                max={3}
+                                step={0.1}
+                                aria-labelledby="Zoom"
+                                onChange={(_, zoom) => setZoom(zoom as number)}
+                            />
+                        </Box>
                     </Box>
                 )}
                 <Button

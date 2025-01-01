@@ -4,7 +4,6 @@ import {
     onAuthStateChanged,
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
-    User as FirebaseUser,
 } from 'firebase/auth';
 import { app } from './firebaseConfig';
 import { useNotifications } from '@toolpad/core';
@@ -73,8 +72,15 @@ export function useAuth() {
             localStorage.setItem('user', JSON.stringify(loggedInUser));
 
             const profilePicPath = `users/${loggedInUser.email}/profile.jpg`;
-            const profilePicUrl = await getImageUrl(profilePicPath);
-            setProfilePicture(profilePicUrl);
+            try {
+                const profilePicUrl = await getImageUrl(profilePicPath);
+                if (profilePicUrl) {
+                    setProfilePicture(profilePicUrl);
+                }
+            } catch (error) {
+                console.warn('Profile picture not found:', error);
+                setProfilePicture(null);
+            }
 
             notifications.show('Welcome back!', {
                 severity: 'success',
@@ -119,8 +125,15 @@ export function useAuth() {
                     localStorage.setItem('user', JSON.stringify(user));
 
                     const profilePicPath = `users/${user.email}/profile.jpg`;
-                    const profilePicUrl = await getImageUrl(profilePicPath);
-                    setProfilePicture(profilePicUrl);
+                    try {
+                        const profilePicUrl = await getImageUrl(profilePicPath);
+                        if (profilePicUrl) {
+                            setProfilePicture(profilePicUrl);
+                        }
+                    } catch (error) {
+                        console.warn('Profile picture not found:', error);
+                        setProfilePicture(null);
+                    }
                 } catch (error) {
                     console.error('Error fetching user:', error);
                     setUser(null);
