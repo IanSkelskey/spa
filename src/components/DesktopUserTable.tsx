@@ -90,21 +90,23 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
             headerName: 'Photo',
             width: 64,
             renderCell: (params) => (
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        height: '100%',
-                        cursor: 'pointer',
-                    }}
-                    onClick={() => handleProfilePictureClick(profilePictures[params.row.email])}
-                >
-                    <Avatar
-                        src={profilePictures[params.row.email] || ''}
-                        alt={`${params.row.firstName} ${params.row.lastName}`}
-                        sx={{ width: 32, height: 32 }}
-                    />
-                </div>
+                <Tooltip title="View Profile Picture">
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            height: '100%',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => handleProfilePictureClick(profilePictures[params.row.email])}
+                    >
+                        <Avatar
+                            src={profilePictures[params.row.email] || ''}
+                            alt={`${params.row.firstName} ${params.row.lastName}`}
+                            sx={{ width: 32, height: 32 }}
+                        />
+                    </div>
+                </Tooltip>
             ),
         },
         { field: 'firstName', headerName: 'First name', width: 150 },
@@ -132,12 +134,14 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                             </IconButton>
                         </Tooltip>
                     </Link>
-                    <IconButton
-                        color="error"
-                        onClick={() => handleDeleteClick(params.row as User)}
-                    >
-                        <Delete />
-                    </IconButton>
+                    <Tooltip title="Delete User">
+                        <IconButton
+                            color="error"
+                            onClick={() => handleDeleteClick(params.row as User)}
+                        >
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
                 </div>
             ),
         },

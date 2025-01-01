@@ -117,12 +117,14 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                 />
                             </ListItemIcon>
                             <ListItemIcon>
-                                <Avatar
-                                    src={profilePictures[user.email] || ''}
-                                    alt={`${user.firstName} ${user.lastName}`}
-                                    sx={{ cursor: 'pointer' }}
-                                    onClick={() => handleProfilePictureClick(profilePictures[user.email])}
-                                />
+                                <Tooltip title="View Profile Picture">
+                                    <Avatar
+                                        src={profilePictures[user.email] || ''}
+                                        alt={`${user.firstName} ${user.lastName}`}
+                                        sx={{ cursor: 'pointer' }}
+                                        onClick={() => handleProfilePictureClick(profilePictures[user.email])}
+                                    />
+                                </Tooltip>
                             </ListItemIcon>
                             <ListItemText
                                 id={labelId}
@@ -153,12 +155,14 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                     </IconButton>
                                 </Tooltip>
                             </Link>
-                            <IconButton
-                                color="error"
-                                onClick={() => handleDeleteClick(user)}
-                            >
-                                <Delete />
-                            </IconButton>
+                            <Tooltip title="Delete User">
+                                <IconButton
+                                    color="error"
+                                    onClick={() => handleDeleteClick(user)}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </Tooltip>
                         </ListItem>
                     );
                 })}
