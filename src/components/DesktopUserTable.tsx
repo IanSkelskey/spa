@@ -1,4 +1,3 @@
-// src/components/DesktopUserTable.tsx
 import React, { useState } from 'react';
 import {
     DataGrid,
@@ -10,7 +9,7 @@ import {
     GridToolbarDensitySelector,
 } from '@mui/x-data-grid';
 import User from '../models/User';
-import { Button, Tooltip, IconButton } from '@mui/material';
+import { Button, Tooltip, IconButton, Avatar } from '@mui/material';
 import { Add, Delete, Info } from '@mui/icons-material';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 import { Link } from 'react-router-dom';
@@ -54,6 +53,20 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
     };
 
     const columns: GridColDef[] = [
+        {
+            field: 'profilePicture',
+            headerName: 'Photo',
+            width: 64,
+            renderCell: (params) => (
+                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                    <Avatar
+                        src={`users/${params.row.email}/profile.jpg`}
+                        alt={`${params.row.firstName} ${params.row.lastName}`}
+                        sx={{ width: 32, height: 32 }}
+                    />
+                </div>
+            ),
+        },
         { field: 'firstName', headerName: 'First name', width: 150 },
         { field: 'lastName', headerName: 'Last name', width: 150 },
         { field: 'email', headerName: 'Email', width: 200 },
@@ -63,8 +76,8 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
-                <>
-					<Link to={`/${role === 'client' ? 'clients' : role}/${params.row.email}`}>
+                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                    <Link to={`/${role === 'client' ? 'clients' : role}/${params.row.email}`}>
                         <Tooltip title="View Details">
                             <IconButton color="primary">
                                 <Info />
@@ -77,7 +90,7 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                     >
                         <Delete />
                     </IconButton>
-                </>
+                </div>
             ),
         },
     ];

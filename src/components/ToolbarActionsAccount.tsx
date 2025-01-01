@@ -27,7 +27,7 @@ function ToolbarActionsAccount({ logout }: { logout: () => void }) {
     };
 
     return (
-        <Box display="flex" alignItems="center" overflow="hidden">
+        <Box display="flex" alignItems="center" overflow="hidden" paddingRight={4}>
             {user && (
                 <>
                     <Tooltip title="Open profile menu" disableInteractive>
