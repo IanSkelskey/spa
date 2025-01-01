@@ -108,14 +108,16 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
                 {preview && (
                     <Box mt={2} width="100%">
                         <Typography variant="body2">Zoom:</Typography>
-                        <Slider
-                            value={zoom}
-                            min={1}
-                            max={3}
-                            step={0.1}
-                            aria-labelledby="Zoom"
-                            onChange={(_, zoom) => setZoom(zoom as number)}
-                        />
+                        <Box mx={2}>
+                            <Slider
+                                value={zoom}
+                                min={1}
+                                max={3}
+                                step={0.1}
+                                aria-labelledby="Zoom"
+                                onChange={(_, zoom) => setZoom(zoom as number)}
+                            />
+                        </Box>
                     </Box>
                 )}
                 <Box

@@ -12,8 +12,10 @@ import User from '../models/User';
 import { Button, Tooltip, IconButton, Avatar } from '@mui/material';
 import { Add, Delete, Info } from '@mui/icons-material';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
+import ImageViewModal from './modals/ImageViewModal';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/storage';
+import { useNotifications } from '@toolpad/core';
 
 interface DesktopUserTableProps {
     users: User[];
@@ -34,6 +36,9 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
     const [profilePictures, setProfilePictures] = useState<{
         [email: string]: string | null;
     }>({});
+    const [isImageViewModalOpen, setIsImageViewModalOpen] = useState(false);
+    const [imageViewUrl, setImageViewUrl] = useState<string | null>(null);
+    const notifications = useNotifications();
 
     useEffect(() => {
         const fetchProfilePictures = async () => {
@@ -74,25 +79,41 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
         setChecked([]);
     };
 
+    const handleProfilePictureClick = (url: string | null, user: User) => {
+        if (url) {
+            setImageViewUrl(url);
+            setIsImageViewModalOpen(true);
+        } else {
+            notifications.show(`No profile picture set for ${user.firstName} ${user.lastName}`, {
+                severity: 'info',
+                autoHideDuration: 3000,
+            });
+        }
+    };
+
     const columns: GridColDef[] = [
         {
             field: 'profilePicture',
             headerName: 'Photo',
             width: 64,
             renderCell: (params) => (
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        height: '100%',
-                    }}
-                >
-                    <Avatar
-                        src={profilePictures[params.row.email] || ''}
-                        alt={`${params.row.firstName} ${params.row.lastName}`}
-                        sx={{ width: 32, height: 32 }}
-                    />
-                </div>
+                <Tooltip title="View Profile Picture">
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            height: '100%',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => handleProfilePictureClick(profilePictures[params.row.email], params.row)}
+                    >
+                        <Avatar
+                            src={profilePictures[params.row.email] || ''}
+                            alt={`${params.row.firstName} ${params.row.lastName}`}
+                            sx={{ width: 32, height: 32 }}
+                        />
+                    </div>
+                </Tooltip>
             ),
         },
         { field: 'firstName', headerName: 'First name', width: 150 },
@@ -120,12 +141,14 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                             </IconButton>
                         </Tooltip>
                     </Link>
-                    <IconButton
-                        color="error"
-                        onClick={() => handleDeleteClick(params.row as User)}
-                    >
-                        <Delete />
-                    </IconButton>
+                    <Tooltip title="Delete User">
+                        <IconButton
+                            color="error"
+                            onClick={() => handleDeleteClick(params.row as User)}
+                        >
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
                 </div>
             ),
         },
@@ -190,6 +213,14 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                             ? `${selectedUsers[0].firstName} ${selectedUsers[0].lastName}`
                             : `${selectedUsers.length} users`
                     }
+                />
+            )}
+            {imageViewUrl && (
+                <ImageViewModal
+                    open={isImageViewModalOpen}
+                    onClose={() => setIsImageViewModalOpen(false)}
+                    imageUrl={imageViewUrl}
+                    title="Profile Picture"
                 />
             )}
         </>
