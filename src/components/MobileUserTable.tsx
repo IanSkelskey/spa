@@ -1,4 +1,3 @@
-// src/components/MobileUserTable.tsx
 import React, { useState } from 'react';
 import {
     List,
@@ -9,6 +8,7 @@ import {
     IconButton,
     Tooltip,
     Fab,
+    Avatar,
 } from '@mui/material';
 import { Add, Delete, Info } from '@mui/icons-material';
 import User from '../models/User';
@@ -71,6 +71,7 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
             <List>
                 {users.map((user, index) => {
                     const labelId = `checkbox-list-label-${index}`;
+                    const profilePicPath = `users/${user.email}/profile.jpg`;
 
                     return (
                         <ListItem key={index} divider>
@@ -84,6 +85,12 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                         'aria-labelledby': labelId,
                                     }}
                                     onClick={handleToggle(index)}
+                                />
+                            </ListItemIcon>
+                            <ListItemIcon>
+                                <Avatar
+                                    src={profilePicPath}
+                                    alt={`${user.firstName} ${user.lastName}`}
                                 />
                             </ListItemIcon>
                             <ListItemText
@@ -106,7 +113,9 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                     </>
                                 }
                             />
-                            <Link to={`/${role || 'clients'}/${user.email}`}>
+                            <Link
+                                to={`/${role === 'client' ? 'clients' : role}/${user.email}`}
+                            >
                                 <Tooltip title="View Details">
                                     <IconButton color="primary">
                                         <Info />

@@ -71,7 +71,13 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
                                     </IconButton>
                                 </Tooltip>
                             </Box>
-                            <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+                            <Box
+                                sx={{
+                                    flexGrow: 1,
+                                    overflowY: 'auto',
+                                    overflowX: 'hidden',
+                                }}
+                            >
                                 {children}
                             </Box>
                         </Box>

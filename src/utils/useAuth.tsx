@@ -3,22 +3,44 @@ import {
     getAuth,
     onAuthStateChanged,
     sendPasswordResetEmail,
-    User,
+    signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { app } from './firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNotifications } from '@toolpad/core';
+import { getUserByEmail } from './firestore';
+import { getImageUrl } from './storage';
+import User from '../models/User';
 
 const auth = getAuth(app);
 
 export function useAuth() {
-    const [user, setUser] = useState<User | null>(null);
-    const notifications = useNotifications(); // Hook for notifications
+    const [user, setUser] = useState<User | null>(() => {
+        const cachedUser = localStorage.getItem('user');
+        return cachedUser ? JSON.parse(cachedUser) : null;
+    });
+    const [profilePicture, setProfilePictureState] = useState<string | null>(
+        () => {
+            return localStorage.getItem('profilePicture');
+        }
+    );
+    const notifications = useNotifications();
+
+    const setProfilePicture = (url: string | null) => {
+        setProfilePictureState(url);
+        if (url) {
+            localStorage.setItem('profilePicture', url);
+        } else {
+            localStorage.removeItem('profilePicture');
+        }
+    };
 
     const logout = () => {
         auth.signOut()
             .then(() => {
                 setUser(null);
+                setProfilePicture(null);
+                localStorage.removeItem('user');
+                localStorage.removeItem('profilePicture');
                 notifications.show('Successfully logged out!', {
                     severity: 'success',
                     autoHideDuration: 3000,
@@ -43,12 +65,28 @@ export function useAuth() {
                 email,
                 password
             );
-            setUser(userCredential.user);
+            const loggedInUser = await getUserByEmail(
+                userCredential.user.email!
+            );
+            setUser(loggedInUser);
+            localStorage.setItem('user', JSON.stringify(loggedInUser));
+
+            const profilePicPath = `users/${loggedInUser.email}/profile.jpg`;
+            try {
+                const profilePicUrl = await getImageUrl(profilePicPath);
+                if (profilePicUrl) {
+                    setProfilePicture(profilePicUrl);
+                }
+            } catch (error) {
+                console.warn('Profile picture not found:', error);
+                setProfilePicture(null);
+            }
+
             notifications.show('Welcome back!', {
                 severity: 'success',
                 autoHideDuration: 3000,
             });
-            return { user: userCredential.user };
+            return { user: loggedInUser };
         } catch (error: unknown) {
             if (error instanceof Error) {
                 const errorMessage = error.message.includes(
@@ -79,16 +117,47 @@ export function useAuth() {
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                try {
+                    const user = await getUserByEmail(firebaseUser.email!);
+                    setUser(user);
+                    localStorage.setItem('user', JSON.stringify(user));
+
+                    const profilePicPath = `users/${user.email}/profile.jpg`;
+                    try {
+                        const profilePicUrl = await getImageUrl(profilePicPath);
+                        if (profilePicUrl) {
+                            setProfilePicture(profilePicUrl);
+                        }
+                    } catch (error) {
+                        console.warn('Profile picture not found:', error);
+                        setProfilePicture(null);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                    setUser(null);
+                    setProfilePicture(null);
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('profilePicture');
+                }
             } else {
                 setUser(null);
+                setProfilePicture(null);
+                localStorage.removeItem('user');
+                localStorage.removeItem('profilePicture');
             }
         });
 
         return () => unsubscribe();
     }, []);
 
-    return { user, login, logout, resetPassword };
+    return {
+        user,
+        profilePicture,
+        setProfilePicture,
+        login,
+        logout,
+        resetPassword,
+    };
 }
