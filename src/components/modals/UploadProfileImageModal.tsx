@@ -48,7 +48,15 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
     };
 
     const onCropComplete = useCallback(
-        (_croppedArea: any, croppedAreaPixels: any) => {
+        (
+            _croppedArea: any,
+            croppedAreaPixels: {
+                x: number;
+                y: number;
+                width: number;
+                height: number;
+            }
+        ) => {
             setCroppedAreaPixels(croppedAreaPixels);
         },
         [setCroppedAreaPixels]
@@ -86,18 +94,6 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
             title="Upload Profile Picture"
         >
             <Box display="flex" flexDirection="column" alignItems="center">
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    style={{ display: 'none' }}
-                    id="upload-profile-image-input"
-                />
-                <label htmlFor="upload-profile-image-input">
-                    <Button variant="contained" component="span">
-                        Select Image
-                    </Button>
-                </label>
                 <Box mt={2} width="100%" height={400} position="relative">
                     <Cropper
                         image={preview || undefined}
@@ -112,28 +108,53 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
                 {preview && (
                     <Box mt={2} width="100%">
                         <Typography variant="body2">Zoom:</Typography>
-                        <Box px={2}>
-                            <Slider
-                                value={zoom}
-                                min={1}
-                                max={3}
-                                step={0.1}
-                                aria-labelledby="Zoom"
-                                onChange={(_, zoom) => setZoom(zoom as number)}
-                            />
-                        </Box>
+                        <Slider
+                            value={zoom}
+                            min={1}
+                            max={3}
+                            step={0.1}
+                            aria-labelledby="Zoom"
+                            onChange={(_, zoom) => setZoom(zoom as number)}
+                        />
                     </Box>
                 )}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleUpload}
-                    disabled={!selectedFile || loading}
-                    sx={{ mt: 2 }}
-                    startIcon={loading && <CircularProgress size={20} />}
+                <Box
+                    mt={2}
+                    display="flex"
+                    justifyContent="space-between"
+                    width="100%"
                 >
-                    {loading ? 'Uploading...' : 'Upload'}
-                </Button>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                        id="upload-profile-image-input"
+                    />
+                    <label htmlFor="upload-profile-image-input">
+                        <Button variant="contained" component="span">
+                            Select Image
+                        </Button>
+                    </label>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleUpload}
+                        disabled={!selectedFile || loading}
+                        startIcon={
+                            loading ? <CircularProgress size={20} /> : null
+                        }
+                    >
+                        {loading ? 'Uploading...' : 'Upload'}
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={handleClose}
+                    >
+                        Cancel
+                    </Button>
+                </Box>
             </Box>
         </ReusableModal>
     );

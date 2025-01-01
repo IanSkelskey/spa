@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     DataGrid,
     GridColDef,
@@ -13,6 +13,7 @@ import { Button, Tooltip, IconButton, Avatar } from '@mui/material';
 import { Add, Delete, Info } from '@mui/icons-material';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../utils/storage';
 
 interface DesktopUserTableProps {
     users: User[];
@@ -30,6 +31,27 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
     const [checked, setChecked] = useState<number[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [profilePictures, setProfilePictures] = useState<{
+        [email: string]: string | null;
+    }>({});
+
+    useEffect(() => {
+        const fetchProfilePictures = async () => {
+            const pictures: { [email: string]: string | null } = {};
+            for (const user of users) {
+                try {
+                    const profilePicPath = `users/${user.email}/profile.jpg`;
+                    const profilePicUrl = await getImageUrl(profilePicPath);
+                    pictures[user.email] = profilePicUrl;
+                } catch (error) {
+                    console.error('Error fetching profile picture:', error);
+                    pictures[user.email] = null;
+                }
+            }
+            setProfilePictures(pictures);
+        };
+        fetchProfilePictures();
+    }, [users]);
 
     const handleDeleteClick = (user: User) => {
         setSelectedUsers([user]);
@@ -66,7 +88,7 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                     }}
                 >
                     <Avatar
-                        src={`users/${params.row.email}/profile.jpg`}
+                        src={profilePictures[params.row.email] || ''}
                         alt={`${params.row.firstName} ${params.row.lastName}`}
                         sx={{ width: 32, height: 32 }}
                     />
