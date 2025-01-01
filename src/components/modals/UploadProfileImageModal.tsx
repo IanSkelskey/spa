@@ -5,9 +5,7 @@ import {
     Typography,
     CircularProgress,
     Slider,
-    IconButton,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import Cropper from 'react-easy-crop';
 import ReusableModal from './ReusableModal';
 import getCroppedImg from '../../utils/cropImage';
@@ -28,7 +26,12 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
     const [loading, setLoading] = useState(false);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
-    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    } | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] || null;
@@ -44,15 +47,18 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
         }
     };
 
-    const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-        setCroppedAreaPixels(croppedAreaPixels);
-    }, []);
+    const onCropComplete = useCallback(
+        (croppedArea, croppedAreaPixels) => {
+            setCroppedAreaPixels(croppedAreaPixels);
+        },
+        [setCroppedAreaPixels]
+    );
 
     const handleUpload = async () => {
         if (selectedFile && croppedAreaPixels) {
             setLoading(true);
             const croppedImage = await getCroppedImg(
-                preview,
+                preview!,
                 croppedAreaPixels
             );
             const croppedFile = new File([croppedImage], selectedFile.name, {
@@ -94,7 +100,7 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
                 </label>
                 <Box mt={2} width="100%" height={400} position="relative">
                     <Cropper
-                        image={preview}
+                        image={preview || undefined}
                         crop={crop}
                         zoom={zoom}
                         aspect={1}

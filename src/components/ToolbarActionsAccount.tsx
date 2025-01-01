@@ -50,10 +50,7 @@ function ToolbarActionsAccount({ logout }: { logout: () => void }) {
                         >
                             <Avatar
                                 src={profilePicture || ''}
-                                alt={
-                                    user.displayName ||
-                                    `${user.firstName} ${user.lastName}`
-                                }
+                                alt={`${user.firstName} ${user.lastName}`}
                                 sx={{ width: 32, height: 32 }}
                             />
                         </IconButton>

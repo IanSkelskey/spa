@@ -9,7 +9,7 @@ interface ImageViewModalProps {
     title: string;
 }
 
-const ImageViewModal: React.FC<ImageModalProps> = ({
+const ImageViewModal: React.FC<ImageViewModalProps> = ({
     open,
     onClose,
     imageUrl,

@@ -8,7 +8,6 @@ import { Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { Badge, Dashboard, Home, People, Person } from '@mui/icons-material';
 import { getUserRole } from './utils/firestore';
-import { NavigationItem } from '@toolpad/core';
 
 function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -30,7 +29,7 @@ function App() {
         }
     };
 
-    const NAVIGATION: Navigation = React.useMemo(() => {
+    const NAVIGATION: NavigationItem[] = React.useMemo(() => {
         if (role === 'owner' || role === 'staff') {
             const navigationItems = [
                 {

@@ -1,4 +1,3 @@
-// src/components/MobileUserTable.tsx
 import React, { useState } from 'react';
 import {
     List,
@@ -15,7 +14,6 @@ import { Add, Delete, Info } from '@mui/icons-material';
 import User from '../models/User';
 import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 import { Link } from 'react-router-dom';
-import { getImageUrl } from '../utils/storage';
 
 interface MobileUserTableProps {
     users: User[];

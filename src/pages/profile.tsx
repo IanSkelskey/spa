@@ -3,7 +3,7 @@ import Tooltip from '@mui/material/Tooltip';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 import { PageContainer, useNotifications } from '@toolpad/core';
-import { Box, Avatar, CircularProgress, IconButton, Fab } from '@mui/material';
+import { Box, Avatar, CircularProgress, Fab } from '@mui/material';
 import User from '../models/User';
 import { useAuth } from '../utils/useAuth';
 import UploadProfileImageModal from '../components/modals/UploadProfileImageModal';
@@ -65,10 +65,7 @@ const ProfilePage = () => {
                     ) : (
                         <Avatar
                             src={profilePicture || ''}
-                            alt={
-                                currentUser.displayName ||
-                                `${currentUser.firstName} ${currentUser.lastName}`
-                            }
+                            alt={`${currentUser.firstName} ${currentUser.lastName}`}
                             sx={{
                                 width: 100,
                                 height: 100,
@@ -95,8 +92,7 @@ const ProfilePage = () => {
                     </Tooltip>
                 </Box>
                 <Typography variant="h5" gutterBottom>
-                    {currentUser.displayName ||
-                        `${currentUser.firstName} ${currentUser.lastName}`}
+                    {`${currentUser.firstName} ${currentUser.lastName}`}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                     {currentUser.email}
