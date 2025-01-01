@@ -66,7 +66,7 @@ export function useAuth() {
                 password
             );
             const loggedInUser = await getUserByEmail(
-                userCredential.user.email
+                userCredential.user.email!
             );
             setUser(loggedInUser);
             localStorage.setItem('user', JSON.stringify(loggedInUser));
@@ -120,7 +120,7 @@ export function useAuth() {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
                 try {
-                    const user = await getUserByEmail(firebaseUser.email);
+                    const user = await getUserByEmail(firebaseUser.email!);
                     setUser(user);
                     localStorage.setItem('user', JSON.stringify(user));
 
