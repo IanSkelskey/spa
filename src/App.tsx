@@ -55,15 +55,16 @@ function App() {
                     pattern: 'clients{/:email}*',
                 },
             ];
-
+    
             if (role === 'owner') {
                 navigationItems.push({
                     segment: 'staff',
                     title: 'Staff',
                     icon: <Badge />,
+                    pattern: 'staff{/:email}*',
                 });
             }
-
+    
             return navigationItems;
         } else if (role === 'client') {
             return [
