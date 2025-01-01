@@ -19,9 +19,11 @@ export function useAuth() {
         const cachedUser = localStorage.getItem('user');
         return cachedUser ? JSON.parse(cachedUser) : null;
     });
-    const [profilePicture, setProfilePictureState] = useState<string | null>(() => {
-        return localStorage.getItem('profilePicture');
-    });
+    const [profilePicture, setProfilePictureState] = useState<string | null>(
+        () => {
+            return localStorage.getItem('profilePicture');
+        }
+    );
     const notifications = useNotifications();
 
     const setProfilePicture = (url: string | null) => {
@@ -64,7 +66,9 @@ export function useAuth() {
                 email,
                 password
             );
-            const loggedInUser = await getUserByEmail(userCredential.user.email);
+            const loggedInUser = await getUserByEmail(
+                userCredential.user.email
+            );
             setUser(loggedInUser);
             localStorage.setItem('user', JSON.stringify(loggedInUser));
 
@@ -135,5 +139,12 @@ export function useAuth() {
         return () => unsubscribe();
     }, []);
 
-    return { user, profilePicture, setProfilePicture, login, logout, resetPassword };
+    return {
+        user,
+        profilePicture,
+        setProfilePicture,
+        login,
+        logout,
+        resetPassword,
+    };
 }

@@ -1,4 +1,11 @@
-import { IconButton, Tooltip, Avatar, Box, Menu, MenuItem } from '@mui/material';
+import {
+    IconButton,
+    Tooltip,
+    Avatar,
+    Box,
+    Menu,
+    MenuItem,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/useAuth';
 import React, { useState } from 'react';
@@ -27,7 +34,12 @@ function ToolbarActionsAccount({ logout }: { logout: () => void }) {
     };
 
     return (
-        <Box display="flex" alignItems="center" overflow="hidden" paddingRight={4}>
+        <Box
+            display="flex"
+            alignItems="center"
+            overflow="hidden"
+            paddingRight={4}
+        >
             {user && (
                 <>
                     <Tooltip title="Open profile menu" disableInteractive>
@@ -38,7 +50,10 @@ function ToolbarActionsAccount({ logout }: { logout: () => void }) {
                         >
                             <Avatar
                                 src={profilePicture || ''}
-                                alt={user.displayName || `${user.firstName} ${user.lastName}`}
+                                alt={
+                                    user.displayName ||
+                                    `${user.firstName} ${user.lastName}`
+                                }
                                 sx={{ width: 32, height: 32 }}
                             />
                         </IconButton>
@@ -54,7 +69,9 @@ function ToolbarActionsAccount({ logout }: { logout: () => void }) {
                             },
                         }}
                     >
-                        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+                        <MenuItem onClick={handleProfileClick}>
+                            Profile
+                        </MenuItem>
                         <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
                     </Menu>
                 </>

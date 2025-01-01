@@ -65,8 +65,16 @@ const ProfilePage = () => {
                     ) : (
                         <Avatar
                             src={profilePicture || ''}
-                            alt={currentUser.displayName || `${currentUser.firstName} ${currentUser.lastName}`}
-                            sx={{ width: 100, height: 100, mb: 2, cursor: 'pointer' }}
+                            alt={
+                                currentUser.displayName ||
+                                `${currentUser.firstName} ${currentUser.lastName}`
+                            }
+                            sx={{
+                                width: 100,
+                                height: 100,
+                                mb: 2,
+                                cursor: 'pointer',
+                            }}
                             onClick={() => setIsImageViewModalOpen(true)}
                         />
                     )}
@@ -87,7 +95,8 @@ const ProfilePage = () => {
                     </Tooltip>
                 </Box>
                 <Typography variant="h5" gutterBottom>
-                    {currentUser.displayName || `${currentUser.firstName} ${currentUser.lastName}`}
+                    {currentUser.displayName ||
+                        `${currentUser.firstName} ${currentUser.lastName}`}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                     {currentUser.email}

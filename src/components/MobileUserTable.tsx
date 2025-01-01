@@ -115,7 +115,9 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                     </>
                                 }
                             />
-                            <Link to={`/${role === 'client' ? 'clients' : role}/${user.email}`}>
+                            <Link
+                                to={`/${role === 'client' ? 'clients' : role}/${user.email}`}
+                            >
                                 <Tooltip title="View Details">
                                     <IconButton color="primary">
                                         <Info />

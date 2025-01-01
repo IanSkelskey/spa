@@ -1,5 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import { Button, Box, Typography, CircularProgress, Slider, IconButton } from '@mui/material';
+import {
+    Button,
+    Box,
+    Typography,
+    CircularProgress,
+    Slider,
+    IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Cropper from 'react-easy-crop';
 import ReusableModal from './ReusableModal';
@@ -44,8 +51,13 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
     const handleUpload = async () => {
         if (selectedFile && croppedAreaPixels) {
             setLoading(true);
-            const croppedImage = await getCroppedImg(preview, croppedAreaPixels);
-            const croppedFile = new File([croppedImage], selectedFile.name, { type: selectedFile.type });
+            const croppedImage = await getCroppedImg(
+                preview,
+                croppedAreaPixels
+            );
+            const croppedFile = new File([croppedImage], selectedFile.name, {
+                type: selectedFile.type,
+            });
             await onUpload(croppedFile);
             setLoading(false);
             handleClose();
@@ -62,7 +74,11 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
     };
 
     return (
-        <ReusableModal open={open} onClose={handleClose} title="Upload Profile Picture">
+        <ReusableModal
+            open={open}
+            onClose={handleClose}
+            title="Upload Profile Picture"
+        >
             <Box display="flex" flexDirection="column" alignItems="center">
                 <input
                     type="file"

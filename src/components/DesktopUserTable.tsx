@@ -58,7 +58,13 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
             headerName: 'Photo',
             width: 64,
             renderCell: (params) => (
-                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        height: '100%',
+                    }}
+                >
                     <Avatar
                         src={`users/${params.row.email}/profile.jpg`}
                         alt={`${params.row.firstName} ${params.row.lastName}`}
@@ -76,8 +82,16 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
-                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                    <Link to={`/${role === 'client' ? 'clients' : role}/${params.row.email}`}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        height: '100%',
+                    }}
+                >
+                    <Link
+                        to={`/${role === 'client' ? 'clients' : role}/${params.row.email}`}
+                    >
                         <Tooltip title="View Details">
                             <IconButton color="primary">
                                 <Info />
