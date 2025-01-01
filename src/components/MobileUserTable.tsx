@@ -34,7 +34,9 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
     const [checked, setChecked] = useState<number[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [profilePictures, setProfilePictures] = useState<{ [email: string]: string | null }>({});
+    const [profilePictures, setProfilePictures] = useState<{
+        [email: string]: string | null;
+    }>({});
     const [isImageViewModalOpen, setIsImageViewModalOpen] = useState(false);
     const [imageViewUrl, setImageViewUrl] = useState<string | null>(null);
     const notifications = useNotifications();
@@ -96,10 +98,13 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
             setImageViewUrl(url);
             setIsImageViewModalOpen(true);
         } else {
-            notifications.show(`No profile picture set for ${user.firstName} ${user.lastName}`, {
-                severity: 'info',
-                autoHideDuration: 3000,
-            });
+            notifications.show(
+                `No profile picture set for ${user.firstName} ${user.lastName}`,
+                {
+                    severity: 'info',
+                    autoHideDuration: 3000,
+                }
+            );
         }
     };
 
@@ -129,7 +134,12 @@ const MobileUserTable: React.FC<MobileUserTableProps> = ({
                                         src={profilePictures[user.email] || ''}
                                         alt={`${user.firstName} ${user.lastName}`}
                                         sx={{ cursor: 'pointer' }}
-                                        onClick={() => handleProfilePictureClick(profilePictures[user.email], user)}
+                                        onClick={() =>
+                                            handleProfilePictureClick(
+                                                profilePictures[user.email],
+                                                user
+                                            )
+                                        }
                                     />
                                 </Tooltip>
                             </ListItemIcon>
