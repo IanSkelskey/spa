@@ -15,6 +15,7 @@ import ConfirmDeleteModal from './modals/ConfirmDeleteModal';
 import ImageViewModal from './modals/ImageViewModal';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/storage';
+import { useNotifications } from '@toolpad/core';
 
 interface DesktopUserTableProps {
     users: User[];
@@ -37,6 +38,7 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
     }>({});
     const [isImageViewModalOpen, setIsImageViewModalOpen] = useState(false);
     const [imageViewUrl, setImageViewUrl] = useState<string | null>(null);
+    const notifications = useNotifications();
 
     useEffect(() => {
         const fetchProfilePictures = async () => {
@@ -77,10 +79,15 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
         setChecked([]);
     };
 
-    const handleProfilePictureClick = (url: string | null) => {
+    const handleProfilePictureClick = (url: string | null, user: User) => {
         if (url) {
             setImageViewUrl(url);
             setIsImageViewModalOpen(true);
+        } else {
+            notifications.show(`No profile picture set for ${user.firstName} ${user.lastName}`, {
+                severity: 'info',
+                autoHideDuration: 3000,
+            });
         }
     };
 
@@ -98,7 +105,7 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                             height: '100%',
                             cursor: 'pointer',
                         }}
-                        onClick={() => handleProfilePictureClick(profilePictures[params.row.email])}
+                        onClick={() => handleProfilePictureClick(profilePictures[params.row.email], params.row)}
                     >
                         <Avatar
                             src={profilePictures[params.row.email] || ''}
