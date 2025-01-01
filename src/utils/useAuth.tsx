@@ -3,22 +3,28 @@ import {
     getAuth,
     onAuthStateChanged,
     sendPasswordResetEmail,
-    User,
+    signInWithEmailAndPassword,
+    User as FirebaseUser,
 } from 'firebase/auth';
 import { app } from './firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNotifications } from '@toolpad/core';
+import { getUserByEmail } from './firestore';
+import User from '../models/User';
 
 const auth = getAuth(app);
 
 export function useAuth() {
-    const [user, setUser] = useState<User | null>(null);
-    const notifications = useNotifications(); // Hook for notifications
+    const [user, setUser] = useState<User | null>(() => {
+        const cachedUser = localStorage.getItem('user');
+        return cachedUser ? JSON.parse(cachedUser) : null;
+    });
+    const notifications = useNotifications();
 
     const logout = () => {
         auth.signOut()
             .then(() => {
                 setUser(null);
+                localStorage.removeItem('user');
                 notifications.show('Successfully logged out!', {
                     severity: 'success',
                     autoHideDuration: 3000,
@@ -43,12 +49,14 @@ export function useAuth() {
                 email,
                 password
             );
-            setUser(userCredential.user);
+            const loggedInUser = await getUserByEmail(userCredential.user.email);
+            setUser(loggedInUser);
+            localStorage.setItem('user', JSON.stringify(loggedInUser));
             notifications.show('Welcome back!', {
                 severity: 'success',
                 autoHideDuration: 3000,
             });
-            return { user: userCredential.user };
+            return { user: loggedInUser };
         } catch (error: unknown) {
             if (error instanceof Error) {
                 const errorMessage = error.message.includes(
@@ -79,11 +87,20 @@ export function useAuth() {
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                try {
+                    const user = await getUserByEmail(firebaseUser.email);
+                    setUser(user);
+                    localStorage.setItem('user', JSON.stringify(user));
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                    setUser(null);
+                    localStorage.removeItem('user');
+                }
             } else {
                 setUser(null);
+                localStorage.removeItem('user');
             }
         });
 
