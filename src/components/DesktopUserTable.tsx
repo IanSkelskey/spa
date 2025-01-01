@@ -64,7 +64,7 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
             width: 150,
             renderCell: (params) => (
                 <>
-					<Link to={`/${role || 'clients'}/${params.row.email}`}>
+                    <Link to={`/${role || 'clients'}/${params.row.email}`}>
                         <Tooltip title="View Details">
                             <IconButton color="primary">
                                 <Info />
