@@ -9,6 +9,7 @@ import {
 import { app } from './firebaseConfig';
 import { useNotifications } from '@toolpad/core';
 import { getUserByEmail } from './firestore';
+import { getImageUrl } from './storage';
 import User from '../models/User';
 
 const auth = getAuth(app);
@@ -18,13 +19,18 @@ export function useAuth() {
         const cachedUser = localStorage.getItem('user');
         return cachedUser ? JSON.parse(cachedUser) : null;
     });
+    const [profilePicture, setProfilePicture] = useState<string | null>(() => {
+        return localStorage.getItem('profilePicture');
+    });
     const notifications = useNotifications();
 
     const logout = () => {
         auth.signOut()
             .then(() => {
                 setUser(null);
+                setProfilePicture(null);
                 localStorage.removeItem('user');
+                localStorage.removeItem('profilePicture');
                 notifications.show('Successfully logged out!', {
                     severity: 'success',
                     autoHideDuration: 3000,
@@ -52,6 +58,12 @@ export function useAuth() {
             const loggedInUser = await getUserByEmail(userCredential.user.email);
             setUser(loggedInUser);
             localStorage.setItem('user', JSON.stringify(loggedInUser));
+
+            const profilePicPath = `users/${loggedInUser.email}/profile.jpg`;
+            const profilePicUrl = await getImageUrl(profilePicPath);
+            setProfilePicture(profilePicUrl);
+            localStorage.setItem('profilePicture', profilePicUrl);
+
             notifications.show('Welcome back!', {
                 severity: 'success',
                 autoHideDuration: 3000,
@@ -93,19 +105,28 @@ export function useAuth() {
                     const user = await getUserByEmail(firebaseUser.email);
                     setUser(user);
                     localStorage.setItem('user', JSON.stringify(user));
+
+                    const profilePicPath = `users/${user.email}/profile.jpg`;
+                    const profilePicUrl = await getImageUrl(profilePicPath);
+                    setProfilePicture(profilePicUrl);
+                    localStorage.setItem('profilePicture', profilePicUrl);
                 } catch (error) {
                     console.error('Error fetching user:', error);
                     setUser(null);
+                    setProfilePicture(null);
                     localStorage.removeItem('user');
+                    localStorage.removeItem('profilePicture');
                 }
             } else {
                 setUser(null);
+                setProfilePicture(null);
                 localStorage.removeItem('user');
+                localStorage.removeItem('profilePicture');
             }
         });
 
         return () => unsubscribe();
     }, []);
 
-    return { user, login, logout, resetPassword };
+    return { user, profilePicture, login, logout, resetPassword };
 }

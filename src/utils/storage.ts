@@ -1,9 +1,14 @@
-import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from './firebaseConfig';
 
 function uploadImage(file: File, path: string) {
-	const storageRef = ref(storage, path);
-	return uploadBytes(storageRef, file);
+    const storageRef = ref(storage, path);
+    return uploadBytes(storageRef, file);
 }
 
-export { uploadImage };
+function getImageUrl(path: string): Promise<string> {
+    const storageRef = ref(storage, path);
+    return getDownloadURL(storageRef);
+}
+
+export { uploadImage, getImageUrl };

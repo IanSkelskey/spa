@@ -2,19 +2,43 @@ import React, { useEffect, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import { PageContainer } from '@toolpad/core';
-import { Box } from '@mui/material';
+import { Box, Avatar, CircularProgress, IconButton, Fab } from '@mui/material';
 import User from '../models/User';
 import { useAuth } from '../utils/useAuth';
+import UploadProfileImageModal from '../components/modals/UploadProfileImageModal';
+import ImageViewModal from '../components/modals/ImageViewModal';
+import { uploadImage, getImageUrl } from '../utils/storage';
 
 const ProfilePage = () => {
-    const { user } = useAuth();
+    const { user, profilePicture, setProfilePicture } = useAuth();
     const [currentUser, setCurrentUser] = useState<User | null>(user);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+    const [isImageViewModalOpen, setIsImageViewModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setCurrentUser(user);
     }, [user]);
+
+    const handleUploadClick = async (file: File) => {
+        if (currentUser) {
+            const path = `users/${currentUser.email}/profile.jpg`;
+            setLoading(true);
+            try {
+                await uploadImage(file, path);
+                const url = await getImageUrl(path);
+                setProfilePicture(url);
+                localStorage.setItem('profilePicture', url);
+                alert('Profile picture uploaded successfully!');
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                alert('Failed to upload profile picture.');
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
 
     if (!currentUser) {
         return (
@@ -28,26 +52,53 @@ const ProfilePage = () => {
 
     return (
         <PageContainer title="Profile" maxWidth={false}>
-            <Typography variant="h5" gutterBottom>
-                {currentUser.displayName || `${currentUser.firstName} ${currentUser.lastName}`}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-                {currentUser.email}
-            </Typography>
-            <Box position="fixed" bottom={16} right={16}>
-                <Tooltip title="Edit Profile">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                            borderRadius: '50%',
-                            minWidth: 56,
-                            minHeight: 56,
-                        }}
-                    >
-                        <EditIcon />
-                    </Button>
-                </Tooltip>
+            <Box display="flex" flexDirection="column" alignItems="flex-start">
+                <Box position="relative" display="inline-block">
+                    {loading ? (
+                        <CircularProgress />
+                    ) : (
+                        <Avatar
+                            src={profilePicture || ''}
+                            alt={currentUser.displayName || `${currentUser.firstName} ${currentUser.lastName}`}
+                            sx={{ width: 100, height: 100, mb: 2, cursor: 'pointer' }}
+                            onClick={() => setIsImageViewModalOpen(true)}
+                        />
+                    )}
+                    <Tooltip title="Edit Profile Picture">
+                        <Fab
+                            color="primary"
+                            size="small"
+                            sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                                zIndex: 1,
+                            }}
+                            onClick={() => setIsUploadModalOpen(true)}
+                        >
+                            <EditIcon />
+                        </Fab>
+                    </Tooltip>
+                </Box>
+                <Typography variant="h5" gutterBottom>
+                    {currentUser.displayName || `${currentUser.firstName} ${currentUser.lastName}`}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    {currentUser.email}
+                </Typography>
+                <UploadProfileImageModal
+                    open={isUploadModalOpen}
+                    onClose={() => setIsUploadModalOpen(false)}
+                    onUpload={handleUploadClick}
+                />
+                {profilePicture && (
+                    <ImageViewModal
+                        open={isImageViewModalOpen}
+                        onClose={() => setIsImageViewModalOpen(false)}
+                        imageUrl={profilePicture}
+                        title="Profile Picture"
+                    />
+                )}
             </Box>
         </PageContainer>
     );
