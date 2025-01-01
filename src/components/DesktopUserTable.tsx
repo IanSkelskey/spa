@@ -31,7 +31,9 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
     const [checked, setChecked] = useState<number[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [profilePictures, setProfilePictures] = useState<{ [email: string]: string | null }>({});
+    const [profilePictures, setProfilePictures] = useState<{
+        [email: string]: string | null;
+    }>({});
 
     useEffect(() => {
         const fetchProfilePictures = async () => {

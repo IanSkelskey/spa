@@ -48,7 +48,15 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
     };
 
     const onCropComplete = useCallback(
-        (_croppedArea: any, croppedAreaPixels: { x: number; y: number; width: number; height: number }) => {
+        (
+            _croppedArea: any,
+            croppedAreaPixels: {
+                x: number;
+                y: number;
+                width: number;
+                height: number;
+            }
+        ) => {
             setCroppedAreaPixels(croppedAreaPixels);
         },
         [setCroppedAreaPixels]
@@ -110,7 +118,12 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
                         />
                     </Box>
                 )}
-                <Box mt={2} display="flex" justifyContent="space-between" width="100%">
+                <Box
+                    mt={2}
+                    display="flex"
+                    justifyContent="space-between"
+                    width="100%"
+                >
                     <input
                         type="file"
                         accept="image/*"
@@ -128,7 +141,9 @@ const UploadProfileImageModal: React.FC<UploadProfileImageModalProps> = ({
                         color="primary"
                         onClick={handleUpload}
                         disabled={!selectedFile || loading}
-                        startIcon={loading ? <CircularProgress size={20} /> : null}
+                        startIcon={
+                            loading ? <CircularProgress size={20} /> : null
+                        }
                     >
                         {loading ? 'Uploading...' : 'Upload'}
                     </Button>
