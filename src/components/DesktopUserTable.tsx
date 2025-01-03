@@ -84,10 +84,13 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
             setImageViewUrl(url);
             setIsImageViewModalOpen(true);
         } else {
-            notifications.show(`No profile picture set for ${user.firstName} ${user.lastName}`, {
-                severity: 'info',
-                autoHideDuration: 3000,
-            });
+            notifications.show(
+                `No profile picture set for ${user.firstName} ${user.lastName}`,
+                {
+                    severity: 'info',
+                    autoHideDuration: 3000,
+                }
+            );
         }
     };
 
@@ -105,7 +108,12 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                             height: '100%',
                             cursor: 'pointer',
                         }}
-                        onClick={() => handleProfilePictureClick(profilePictures[params.row.email], params.row)}
+                        onClick={() =>
+                            handleProfilePictureClick(
+                                profilePictures[params.row.email],
+                                params.row
+                            )
+                        }
                     >
                         <Avatar
                             src={profilePictures[params.row.email] || ''}
@@ -144,7 +152,9 @@ const DesktopUserTable: React.FC<DesktopUserTableProps> = ({
                     <Tooltip title="Delete User">
                         <IconButton
                             color="error"
-                            onClick={() => handleDeleteClick(params.row as User)}
+                            onClick={() =>
+                                handleDeleteClick(params.row as User)
+                            }
                         >
                             <Delete />
                         </IconButton>
